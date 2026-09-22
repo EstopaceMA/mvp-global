@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Suspense } from "react";
-import "@fontsource-variable/geist";
-import "@fontsource-variable/geist-mono";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { Brand, SiteHeader } from "@/components/site-header";

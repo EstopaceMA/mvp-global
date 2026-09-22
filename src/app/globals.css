@@ -12,7 +12,7 @@
   --color-accent: var(--accent); --color-accent-foreground: var(--foreground);
   --color-destructive: #e7636e; --color-border: var(--border); --color-input: var(--border); --color-ring: var(--primary);
   --radius-sm: 6px; --radius-md: 8px; --radius-lg: 12px; --radius-xl: 16px;
-  --font-sans: "Geist Variable", sans-serif; --font-mono: "Geist Mono Variable", monospace;
+  --font-sans: "Segoe UI", system-ui, sans-serif; --font-mono: var(--font-sans);
 }
 :root {
   --background: #f5f7fb; --foreground: #14243b; --card: #ffffff; --popover: #ffffff;
@@ -214,7 +214,7 @@
 .not-found h1 { font-size: 40px; line-height: 1.15; letter-spacing: -.04em; }
 .not-found > p:not(.eyebrow) { color: var(--muted-foreground); font-size: 14px; }
 .mobile-sheet-handle { display: none; }
-.scene-tooltip { font-family: "Geist Variable", sans-serif !important; background: var(--popover) !important; color: var(--foreground) !important; border: 1px solid var(--border); border-radius: 6px; font-size: 11px !important; padding: 9px 12px !important; box-shadow: var(--shadow); }
+.scene-tooltip { font-family: var(--font-sans) !important; background: var(--popover) !important; color: var(--foreground) !important; border: 1px solid var(--border); border-radius: 6px; font-size: 11px !important; padding: 9px 12px !important; box-shadow: var(--shadow); }
 
 /* Feedback starts on press. Independent scale preserves positioned controls' transforms. */
 [data-slot="button"], .nav-link, .profile-link, .active-filters button, .browse-countries a {

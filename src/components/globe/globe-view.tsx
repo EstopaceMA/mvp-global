@@ -25,6 +25,7 @@ export interface GlobeViewProps {
 export default function GlobeView({ counts, selected, sheetOpen, onSelect, onFailure }: GlobeViewProps) {
   const host = useRef<HTMLDivElement>(null);
   const globe = useRef<GlobeHandle>(null);
+  const clickAudio = useRef<HTMLAudioElement>(null);
   const markerElements = useRef(new Map<string, SVGGElement>());
   const selectionPath = useRef<SVGPathElement>(null);
   const hoverPath = useRef<SVGPathElement>(null);
@@ -132,9 +133,20 @@ export default function GlobeView({ counts, selected, sheetOpen, onSelect, onFai
   const hoverCount = hovered ? counts[hovered] ?? 0 : 0;
 
   return <div ref={host} className="globe-host" data-testid="globe-container" data-renderer="magic-ui-cobe" data-ready={ready}>
+    <audio ref={clickAudio} src="/click-effect.mp3" preload="auto" />
     {side > 0 && polygons.length > 0 && <Globe ref={globe} className="globe-renderer" layout={{ centerX, centerY, radius: side * 0.4 }}
       config={config} reducedMotion={reducedMotion} onReady={() => setReady(true)} onFailure={onFailure} onFrame={renderFrame}
-      onPick={(x, y, frame) => { const id = hitTest(x, y, frame); const entry = id ? countryById.get(id) : undefined; if (entry) onSelect(entry.slug); }}
+      onPick={(x, y, frame) => {
+        const id = hitTest(x, y, frame);
+        const entry = id ? countryById.get(id) : undefined;
+        if (!entry) return;
+        const audio = clickAudio.current;
+        if (audio) {
+          audio.currentTime = 0;
+          void audio.play().catch(() => { /* Country selection still works if playback is unavailable. */ });
+        }
+        onSelect(entry.slug);
+      }}
       onHover={(x, y, frame) => {
         const id = hitTest(x, y, frame);
         setHovered(id ?? null);
