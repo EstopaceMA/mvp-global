@@ -69,7 +69,9 @@ Production builds explicitly use Next.js's supported Webpack compiler because Tu
 
 ## Deploy
 
-Create a Vercel Next.js project with **Root Directory: `mvp-site`**, install command `npm ci`, and build command `npm run build`. No sibling-folder access or environment variables are required. Enable Vercel Web Analytics in the project dashboard to collect production page views. Query strings and hashes are removed before page-view events; no custom search or profile events are emitted.
+Create a Vercel Next.js project with **Root Directory: `mvp-site`**, install command `npm ci`, and build command `npm run build`. No sibling-folder access or environment variables are required. Enable Vercel Web Analytics in the project dashboard to collect production page views. Query strings and hashes are removed before Vercel page-view events; no custom search or profile events are emitted.
+
+Microsoft Clarity initializes in the browser on all pages in production builds using project ID `ymc3v0693l`. It is disabled during `npm run dev` and enabled during local production previews. View its session recordings and heatmaps in the corresponding Clarity project dashboard.
 
 For a local production preview:
 

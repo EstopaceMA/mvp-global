@@ -2,6 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { ThemeProvider } from "next-themes";
+import Clarity from "@microsoft/clarity";
 import { Analytics } from "@vercel/analytics/next";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { countries, manifest } from "@/lib/catalog";
@@ -23,6 +24,12 @@ const DirectoryContext = createContext<DirectoryContextValue>({ profiles: null, 
 export const useDirectory = () => useContext(DirectoryContext);
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  useEffect(() => {
+    if (process.env.NODE_ENV === "production") {
+      Clarity.init("ymc3v0693l");
+    }
+  }, []);
+
   const [profiles, setProfiles] = useState<MvpProfile[] | null>(null);
   const [error, setError] = useState<string | null>(null);
   const retry = useCallback(() => {
