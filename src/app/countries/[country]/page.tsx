@@ -20,7 +20,7 @@ export default async function CountryPage({ params, searchParams }: Props) {
   const initial = serverResults(await searchParams, slug);
   return <><main id="main-content" className="directory-page page-container">
     <Link href="/mvps" className="back-link"><ArrowLeft size={14}/>Global directory</Link>
-    <div className="directory-heading country-heading"><div><p className="eyebrow"><span className="status-dot"/>{country.region.toUpperCase()}</p><h1>{country.name}<span className="country-heading-dot">.</span></h1><p>Local knowledge. Global impact.</p></div><div className="directory-summary"><strong>{formatCount(manifest.counts[country.id] ?? 0)}</strong><span>Microsoft MVPs in this snapshot</span><small>Updated {snapshotDate}</small></div></div>
+    <div className="directory-heading country-heading"><div><h1>{country.name}<span className="country-heading-dot">.</span></h1><p>Local knowledge. Global impact.</p></div><div className="directory-summary"><strong>{formatCount(manifest.counts[country.id] ?? 0)}</strong><span>Microsoft MVPs in this snapshot</span><small>Updated {snapshotDate}</small></div></div>
     <DirectoryView initial={initial}/>
   </main><Footer/></>;
 }

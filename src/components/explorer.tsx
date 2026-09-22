@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { ArrowUpRight, ArrowRight, Globe2, MousePointer2, Sparkles, Users, X } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Globe2, MousePointer2, Users, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
 import { GlobeClient } from "./globe/globe-client";
@@ -56,11 +56,8 @@ export function Explorer() {
     {!failed && <GlobeClient counts={counts} selected={filters.country} sheetOpen={showResults} onSelect={onSelect} onFailure={onFailure}/>}
     <div className="explorer-search"><FilterBar counts={counts} onInteract={onFilterInteraction} onSubmit={() => setOpened(true)}/><DataError/></div>
     <section className="explorer-intro" aria-label="Welcome to the community atlas">
-      <p className="eyebrow"><span className="status-dot"/>EXPERTISE. EVERYWHERE.</p>
       <h1>One community.<br/>A world of<br/><span>possibilities.</span></h1>
       <p className="intro-copy">Meet the people who make<br className="desktop-break"/> technology move forward.</p>
-      <div className="intro-divider"/><p className="intro-instruction">Select a country.<br/>Discover its extraordinary minds.</p>
-      <Button variant="outline" className="intro-directory" asChild><Link href={viewHref("/mvps", filters)}>Meet the community<ArrowUpRight size={15}/></Link></Button>
     </section>
     {failed && <section className="globe-fallback" role="status"><span className="fallback-icon"><Globe2 size={36}/></span><h2>A world of expertise.<br/>Another way to explore.</h2><p>The 3D globe isn’t available on this device. Every MVP is still a search away.</p><Button asChild><Link href={viewHref("/mvps", filters)}>Open the directory<ArrowRight size={16}/></Link></Button><p className="text-xs">Or choose a country above to browse its profiles here.</p></section>}
     <div className="atlas-stats"><div><span className="stat-value">{formatCount(total)}</span><span className="stat-label"><Users size={12}/>MICROSOFT MVPs</span></div><div className="stat-divider"/><div><span className="stat-value">{activeCountries}</span><span className="stat-label"><Globe2 size={12}/>COUNTRIES & REGIONS</span></div></div>
@@ -73,7 +70,7 @@ export function Explorer() {
         onInteractOutside={event => { if (!mobile) event.preventDefault(); }}
         onCloseAutoFocus={event => { event.preventDefault(); resultsButton.current?.focus(); }}>
         <div className="mobile-sheet-handle"/>
-        <SheetHeader className="country-sheet-header"><div className="sheet-eyebrow"><span className="eyebrow"><Sparkles size={12}/>{country ? country.region : "THE GLOBAL COMMUNITY"}</span><SheetClose asChild><Button variant="ghost" size="icon" aria-label="Close results"><X size={18}/></Button></SheetClose></div>
+        <SheetHeader className="country-sheet-header"><div className="sheet-actions"><SheetClose asChild><Button variant="ghost" size="icon" aria-label="Close results"><X size={18}/></Button></SheetClose></div>
           <SheetTitle className="country-sheet-title">{country?.name ?? "Find your people."}</SheetTitle>
           <SheetDescription>{country ? "Extraordinary expertise. Right here." : "A shared passion for what’s possible."}</SheetDescription>
           {country && <Link className="country-page-link" href={viewHref(`/countries/${country.slug}`, { ...filters, country: "" })}>Open country directory<ArrowUpRight size={13}/></Link>}

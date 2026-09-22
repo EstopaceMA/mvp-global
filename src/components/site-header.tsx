@@ -24,7 +24,7 @@ export function SiteHeader() {
       <Link href="/about" className={cn("nav-link about-nav", pathname === "/about" && "active")}>About</Link>
     </nav>
     <div className="header-actions"><a className="program-link" href="https://mvp.microsoft.com/" target="_blank" rel="noopener noreferrer">Microsoft MVP program <ArrowUpRight size={13}/></a>
-      <Button variant="ghost" size="icon" className="theme-toggle" aria-label="Toggle color theme" onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}><Sun className="hidden dark:block" size={17}/><Moon className="dark:hidden" size={17}/></Button>
+      <Button variant="ghost" size="icon" className="theme-toggle" aria-label="Toggle color theme" onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}><Sun className="theme-icon theme-icon-sun" size={17} aria-hidden="true"/><Moon className="theme-icon theme-icon-moon" size={17} aria-hidden="true"/></Button>
     </div>
   </header>;
 }

@@ -16,6 +16,6 @@ export function DirectoryView({ initial }: { initial: DirectoryResult }) {
   return <>
     <div className="directory-tools"><FilterBar counts={result.counts}/><Link href={viewHref("/", filters)} className="explore-link"><Globe2 size={16}/>Explore on globe<ArrowUpRight size={14}/></Link></div>
     <Results initial={initial}/>
-    <div className="browse-countries"><p className="eyebrow">KEEP EXPLORING</p><h2>A community without borders.</h2><div>{countries.filter(country => manifest.counts[country.id]).map(country => <Link key={country.id} href={viewHref(`/countries/${country.slug}`, { ...filters, country: "", page: 1 })}>{country.name}<span>{manifest.counts[country.id]}</span></Link>)}</div></div>
+    <div className="browse-countries"><h2>A community without borders.</h2><div>{countries.filter(country => manifest.counts[country.id]).map(country => <Link key={country.id} href={viewHref(`/countries/${country.slug}`, { ...filters, country: "", page: 1 })}>{country.name}<span>{manifest.counts[country.id]}</span></Link>)}</div></div>
   </>;
 }

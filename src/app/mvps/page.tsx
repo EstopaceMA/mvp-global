@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "The directory", description: "Find M
 export default async function DirectoryPage({ searchParams }: { searchParams: Promise<SearchParams> }) {
   const initial = serverResults(await searchParams);
   return <><main id="main-content" className="directory-page page-container">
-    <div className="directory-heading"><div><p className="eyebrow"><span className="status-dot"/>THE GLOBAL DIRECTORY</p><h1>Extraordinary people.<br/><span>Shared possibilities.</span></h1><p>Find the expertise. Make the connection.</p></div><div className="directory-summary"><strong>{formatCount(manifest.profileCount)}</strong><span>Microsoft MVPs · {manifest.countryCount} countries</span><small>Snapshot updated {snapshotDate}</small></div></div>
+    <div className="directory-heading"><div><h1>Extraordinary people.<br/><span>Shared possibilities.</span></h1><p>Find the expertise. Make the connection.</p></div><div className="directory-summary"><strong>{formatCount(manifest.profileCount)}</strong><span>Microsoft MVPs · {manifest.countryCount} countries</span><small>Snapshot updated {snapshotDate}</small></div></div>
     <DirectoryView initial={initial}/>
   </main><Footer/></>;
 }
