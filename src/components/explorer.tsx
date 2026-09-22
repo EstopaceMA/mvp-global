@@ -69,11 +69,12 @@ export function Explorer() {
         onOpenAutoFocus={event => { if (!mobile) event.preventDefault(); }}
         onInteractOutside={event => { if (!mobile) event.preventDefault(); }}
         onCloseAutoFocus={event => { event.preventDefault(); resultsButton.current?.focus(); }}>
-        <div className="mobile-sheet-handle"/>
-        <SheetHeader className="country-sheet-header"><div className="sheet-actions"><SheetClose asChild><Button variant="ghost" size="icon" aria-label="Close results"><X size={18}/></Button></SheetClose></div>
-          <SheetTitle className="country-sheet-title">{country?.name ?? "Find your people."}</SheetTitle>
-          <SheetDescription>{country ? "Extraordinary expertise. Right here." : "A shared passion for what’s possible."}</SheetDescription>
-          {country && <Link className="country-page-link" href={viewHref(`/countries/${country.slug}`, { ...filters, country: "" })}>Open country directory<ArrowUpRight size={13}/></Link>}
+        <SheetHeader className="country-sheet-header">
+          <div className="country-sheet-heading">
+            <SheetTitle className="country-sheet-title">{country?.name ?? "Find your people."}</SheetTitle>
+            <SheetDescription>{country ? "Extraordinary expertise. Right here." : "A shared passion for what’s possible."}</SheetDescription>
+          </div>
+          <div className="sheet-actions"><SheetClose asChild><Button variant="ghost" size="icon" aria-label="Close results"><X size={18}/></Button></SheetClose></div>
         </SheetHeader>
         <div className="sheet-scroll" key={`${filters.country}-${filters.page}`}><Results compact/></div>
       </SheetContent>
