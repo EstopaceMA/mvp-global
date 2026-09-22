@@ -1,0 +1,2180 @@
+[
+  {
+    "id": "AF",
+    "name": "Afghanistan",
+    "slug": "afghanistan",
+    "region": "Asia",
+    "lat": 34.164262,
+    "lng": 66.496586,
+    "geometryId": "AF"
+  },
+  {
+    "id": "AL",
+    "name": "Albania",
+    "slug": "albania",
+    "region": "Europe",
+    "lat": 40.654855,
+    "lng": 20.11384,
+    "geometryId": "AL"
+  },
+  {
+    "id": "DZ",
+    "name": "Algeria",
+    "slug": "algeria",
+    "region": "Africa",
+    "lat": 27.397406,
+    "lng": 2.808241,
+    "geometryId": "DZ"
+  },
+  {
+    "id": "AS",
+    "name": "American Samoa",
+    "slug": "american-samoa",
+    "region": "Oceania",
+    "lat": -14.32671,
+    "lng": -170.747153,
+    "geometryId": null
+  },
+  {
+    "id": "AD",
+    "name": "Andorra",
+    "slug": "andorra",
+    "region": "Europe",
+    "lat": 42.547643,
+    "lng": 1.539409,
+    "geometryId": null
+  },
+  {
+    "id": "AO",
+    "name": "Angola",
+    "slug": "angola",
+    "region": "Africa",
+    "lat": -12.182762,
+    "lng": 17.984249,
+    "geometryId": "AO"
+  },
+  {
+    "id": "AI",
+    "name": "Anguilla",
+    "slug": "anguilla",
+    "region": "North America",
+    "lat": 18.242979,
+    "lng": -63.026361,
+    "geometryId": null
+  },
+  {
+    "id": "AQ",
+    "name": "Antarctica",
+    "slug": "antarctica",
+    "region": "Antarctica",
+    "lat": -79.843222,
+    "lng": 35.885455,
+    "geometryId": "AQ"
+  },
+  {
+    "id": "AG",
+    "name": "Antigua and Barbuda",
+    "slug": "antigua-and-barbuda",
+    "region": "North America",
+    "lat": 17.352249,
+    "lng": -61.790612,
+    "geometryId": null
+  },
+  {
+    "id": "AR",
+    "name": "Argentina",
+    "slug": "argentina",
+    "region": "South America",
+    "lat": -33.501159,
+    "lng": -64.173331,
+    "geometryId": "AR"
+  },
+  {
+    "id": "AM",
+    "name": "Armenia",
+    "slug": "armenia",
+    "region": "Asia",
+    "lat": 40.459077,
+    "lng": 44.800564,
+    "geometryId": "AM"
+  },
+  {
+    "id": "AW",
+    "name": "Aruba",
+    "slug": "aruba",
+    "region": "North America",
+    "lat": 12.5174,
+    "lng": -69.972795,
+    "geometryId": null
+  },
+  {
+    "id": "ATC",
+    "name": "Ashmore and Cartier Islands",
+    "slug": "ashmore-and-cartier-islands",
+    "region": "Oceania",
+    "lat": -12.432571,
+    "lng": 123.586368,
+    "geometryId": null
+  },
+  {
+    "id": "AU",
+    "name": "Australia",
+    "slug": "australia",
+    "region": "Oceania",
+    "lat": -24.129522,
+    "lng": 134.04972,
+    "geometryId": "AU"
+  },
+  {
+    "id": "IOA",
+    "name": "Australian Indian Ocean Territories",
+    "slug": "australian-indian-ocean-territories",
+    "region": "Asia",
+    "lat": -10.490789,
+    "lng": 105.67259,
+    "geometryId": null
+  },
+  {
+    "id": "AT",
+    "name": "Austria",
+    "slug": "austria",
+    "region": "Europe",
+    "lat": 47.518859,
+    "lng": 14.130515,
+    "geometryId": "AT"
+  },
+  {
+    "id": "AZ",
+    "name": "Azerbaijan",
+    "slug": "azerbaijan",
+    "region": "Asia",
+    "lat": 40.402387,
+    "lng": 47.210994,
+    "geometryId": "AZ"
+  },
+  {
+    "id": "BH",
+    "name": "Bahrain",
+    "slug": "bahrain",
+    "region": "Asia",
+    "lat": 26.055972,
+    "lng": 50.554816,
+    "geometryId": null
+  },
+  {
+    "id": "BD",
+    "name": "Bangladesh",
+    "slug": "bangladesh",
+    "region": "Asia",
+    "lat": 24.214956,
+    "lng": 89.684963,
+    "geometryId": "BD"
+  },
+  {
+    "id": "BB",
+    "name": "Barbados",
+    "slug": "barbados",
+    "region": "North America",
+    "lat": 13.163709,
+    "lng": -59.568966,
+    "geometryId": null
+  },
+  {
+    "id": "BY",
+    "name": "Belarus",
+    "slug": "belarus",
+    "region": "Europe",
+    "lat": 53.821888,
+    "lng": 28.417701,
+    "geometryId": "BY"
+  },
+  {
+    "id": "BE",
+    "name": "Belgium",
+    "slug": "belgium",
+    "region": "Europe",
+    "lat": 50.785392,
+    "lng": 4.800448,
+    "geometryId": "BE"
+  },
+  {
+    "id": "BZ",
+    "name": "Belize",
+    "slug": "belize",
+    "region": "North America",
+    "lat": 17.202068,
+    "lng": -88.712962,
+    "geometryId": "BZ"
+  },
+  {
+    "id": "BJ",
+    "name": "Benin",
+    "slug": "benin",
+    "region": "Africa",
+    "lat": 10.324775,
+    "lng": 2.352018,
+    "geometryId": "BJ"
+  },
+  {
+    "id": "BM",
+    "name": "Bermuda",
+    "slug": "bermuda",
+    "region": "North America",
+    "lat": 32.296592,
+    "lng": -64.763573,
+    "geometryId": null
+  },
+  {
+    "id": "BT",
+    "name": "Bhutan",
+    "slug": "bhutan",
+    "region": "Asia",
+    "lat": 27.536685,
+    "lng": 90.040294,
+    "geometryId": "BT"
+  },
+  {
+    "id": "BO",
+    "name": "Bolivia",
+    "slug": "bolivia",
+    "region": "South America",
+    "lat": -16.666015,
+    "lng": -64.593433,
+    "geometryId": "BO"
+  },
+  {
+    "id": "BA",
+    "name": "Bosnia and Herzegovina",
+    "slug": "bosnia-and-herzegovina",
+    "region": "Europe",
+    "lat": 44.091051,
+    "lng": 18.06841,
+    "geometryId": "BA"
+  },
+  {
+    "id": "BW",
+    "name": "Botswana",
+    "slug": "botswana",
+    "region": "Africa",
+    "lat": -22.102634,
+    "lng": 24.179216,
+    "geometryId": "BW"
+  },
+  {
+    "id": "BR",
+    "name": "Brazil",
+    "slug": "brazil",
+    "region": "South America",
+    "lat": -12.098687,
+    "lng": -49.55945,
+    "geometryId": "BR"
+  },
+  {
+    "id": "IO",
+    "name": "British Indian Ocean Territory",
+    "slug": "british-indian-ocean-territory",
+    "region": "Seven seas (open ocean)",
+    "lat": -6.190826,
+    "lng": 71.348349,
+    "geometryId": null
+  },
+  {
+    "id": "VG",
+    "name": "British Virgin Islands",
+    "slug": "british-virgin-islands",
+    "region": "North America",
+    "lat": 18.426606,
+    "lng": -64.63661,
+    "geometryId": null
+  },
+  {
+    "id": "BN",
+    "name": "Brunei",
+    "slug": "brunei",
+    "region": "Asia",
+    "lat": 4.448298,
+    "lng": 114.551943,
+    "geometryId": "BN"
+  },
+  {
+    "id": "BG",
+    "name": "Bulgaria",
+    "slug": "bulgaria",
+    "region": "Europe",
+    "lat": 42.508785,
+    "lng": 25.15709,
+    "geometryId": "BG"
+  },
+  {
+    "id": "BF",
+    "name": "Burkina Faso",
+    "slug": "burkina-faso",
+    "region": "Africa",
+    "lat": 12.673048,
+    "lng": -1.36388,
+    "geometryId": "BF"
+  },
+  {
+    "id": "BI",
+    "name": "Burundi",
+    "slug": "burundi",
+    "region": "Africa",
+    "lat": -3.332836,
+    "lng": 29.917086,
+    "geometryId": "BI"
+  },
+  {
+    "id": "KH",
+    "name": "Cambodia",
+    "slug": "cambodia",
+    "region": "Asia",
+    "lat": 12.647584,
+    "lng": 104.50487,
+    "geometryId": "KH"
+  },
+  {
+    "id": "CM",
+    "name": "Cameroon",
+    "slug": "cameroon",
+    "region": "Africa",
+    "lat": 4.585041,
+    "lng": 12.473488,
+    "geometryId": "CM"
+  },
+  {
+    "id": "CA",
+    "name": "Canada",
+    "slug": "canada",
+    "region": "North America",
+    "lat": 60.324287,
+    "lng": -101.9107,
+    "geometryId": "CA"
+  },
+  {
+    "id": "CV",
+    "name": "Cape Verde",
+    "slug": "cape-verde",
+    "region": "Africa",
+    "lat": 15.074761,
+    "lng": -23.639434,
+    "geometryId": null
+  },
+  {
+    "id": "KY",
+    "name": "Cayman Islands",
+    "slug": "cayman-islands",
+    "region": "North America",
+    "lat": 19.319862,
+    "lng": -81.24055,
+    "geometryId": null
+  },
+  {
+    "id": "CF",
+    "name": "Central African Republic",
+    "slug": "central-african-republic",
+    "region": "Africa",
+    "lat": 6.989681,
+    "lng": 20.906897,
+    "geometryId": "CF"
+  },
+  {
+    "id": "TD",
+    "name": "Chad",
+    "slug": "chad",
+    "region": "Africa",
+    "lat": 15.142959,
+    "lng": 18.645041,
+    "geometryId": "TD"
+  },
+  {
+    "id": "CL",
+    "name": "Chile",
+    "slug": "chile",
+    "region": "South America",
+    "lat": -38.151771,
+    "lng": -72.318871,
+    "geometryId": "CL"
+  },
+  {
+    "id": "CN",
+    "name": "China",
+    "slug": "china",
+    "region": "Asia",
+    "lat": 32.498178,
+    "lng": 106.337289,
+    "geometryId": "CN"
+  },
+  {
+    "id": "CO",
+    "name": "Colombia",
+    "slug": "colombia",
+    "region": "South America",
+    "lat": 3.373111,
+    "lng": -73.174347,
+    "geometryId": "CO"
+  },
+  {
+    "id": "KM",
+    "name": "Comoros",
+    "slug": "comoros",
+    "region": "Africa",
+    "lat": -11.727683,
+    "lng": 43.318094,
+    "geometryId": null
+  },
+  {
+    "id": "CD",
+    "name": "Congo (DRC)",
+    "slug": "congo-drc",
+    "region": "Africa",
+    "lat": -1.858167,
+    "lng": 23.458829,
+    "geometryId": "CD"
+  },
+  {
+    "id": "CK",
+    "name": "Cook Islands",
+    "slug": "cook-islands",
+    "region": "Oceania",
+    "lat": -21.215993,
+    "lng": -159.785675,
+    "geometryId": null
+  },
+  {
+    "id": "CR",
+    "name": "Costa Rica",
+    "slug": "costa-rica",
+    "region": "North America",
+    "lat": 10.0651,
+    "lng": -84.077922,
+    "geometryId": "CR"
+  },
+  {
+    "id": "HR",
+    "name": "Croatia",
+    "slug": "croatia",
+    "region": "Europe",
+    "lat": 45.805799,
+    "lng": 16.37241,
+    "geometryId": "HR"
+  },
+  {
+    "id": "CU",
+    "name": "Cuba",
+    "slug": "cuba",
+    "region": "North America",
+    "lat": 21.334024,
+    "lng": -77.975855,
+    "geometryId": "CU"
+  },
+  {
+    "id": "CW",
+    "name": "Curaçao",
+    "slug": "curacao",
+    "region": "North America",
+    "lat": 12.145039,
+    "lng": -68.920578,
+    "geometryId": null
+  },
+  {
+    "id": "CY",
+    "name": "Cyprus",
+    "slug": "cyprus",
+    "region": "Asia",
+    "lat": 34.913329,
+    "lng": 33.084182,
+    "geometryId": "CY"
+  },
+  {
+    "id": "CZ",
+    "name": "Czechia",
+    "slug": "czechia",
+    "region": "Europe",
+    "lat": 49.882364,
+    "lng": 15.377555,
+    "geometryId": "CZ"
+  },
+  {
+    "id": "CI",
+    "name": "Côte d’Ivoire",
+    "slug": "cote-divoire",
+    "region": "Africa",
+    "lat": 7.49139,
+    "lng": -5.568618,
+    "geometryId": "CI"
+  },
+  {
+    "id": "DK",
+    "name": "Denmark",
+    "slug": "denmark",
+    "region": "Europe",
+    "lat": 55.966965,
+    "lng": 9.018163,
+    "geometryId": "DK"
+  },
+  {
+    "id": "DJ",
+    "name": "Djibouti",
+    "slug": "djibouti",
+    "region": "Africa",
+    "lat": 11.976343,
+    "lng": 42.498825,
+    "geometryId": "DJ"
+  },
+  {
+    "id": "DM",
+    "name": "Dominica",
+    "slug": "dominica",
+    "region": "North America",
+    "lat": 15.458829,
+    "lng": -61.344958,
+    "geometryId": null
+  },
+  {
+    "id": "DO",
+    "name": "Dominican Republic",
+    "slug": "dominican-republic",
+    "region": "North America",
+    "lat": 19.104137,
+    "lng": -70.653998,
+    "geometryId": "DO"
+  },
+  {
+    "id": "TL",
+    "name": "East Timor",
+    "slug": "east-timor",
+    "region": "Asia",
+    "lat": -8.803705,
+    "lng": 125.854679,
+    "geometryId": "TL"
+  },
+  {
+    "id": "EC",
+    "name": "Ecuador",
+    "slug": "ecuador",
+    "region": "South America",
+    "lat": -1.259076,
+    "lng": -78.188375,
+    "geometryId": "EC"
+  },
+  {
+    "id": "EG",
+    "name": "Egypt",
+    "slug": "egypt",
+    "region": "Africa",
+    "lat": 26.186173,
+    "lng": 29.445837,
+    "geometryId": "EG"
+  },
+  {
+    "id": "SV",
+    "name": "El Salvador",
+    "slug": "el-salvador",
+    "region": "North America",
+    "lat": 13.685371,
+    "lng": -88.890124,
+    "geometryId": "SV"
+  },
+  {
+    "id": "GQ",
+    "name": "Equatorial Guinea",
+    "slug": "equatorial-guinea",
+    "region": "Africa",
+    "lat": 2.333,
+    "lng": 8.9902,
+    "geometryId": "GQ"
+  },
+  {
+    "id": "ER",
+    "name": "Eritrea",
+    "slug": "eritrea",
+    "region": "Africa",
+    "lat": 15.787401,
+    "lng": 38.285566,
+    "geometryId": "ER"
+  },
+  {
+    "id": "EE",
+    "name": "Estonia",
+    "slug": "estonia",
+    "region": "Europe",
+    "lat": 58.724865,
+    "lng": 25.867126,
+    "geometryId": "EE"
+  },
+  {
+    "id": "SZ",
+    "name": "Eswatini",
+    "slug": "eswatini",
+    "region": "Africa",
+    "lat": -26.533676,
+    "lng": 31.467264,
+    "geometryId": "SZ"
+  },
+  {
+    "id": "ET",
+    "name": "Ethiopia",
+    "slug": "ethiopia",
+    "region": "Africa",
+    "lat": 8.032795,
+    "lng": 39.0886,
+    "geometryId": "ET"
+  },
+  {
+    "id": "FK",
+    "name": "Falkland Islands",
+    "slug": "falkland-islands",
+    "region": "South America",
+    "lat": -51.608913,
+    "lng": -58.738602,
+    "geometryId": "FK"
+  },
+  {
+    "id": "FO",
+    "name": "Faroe Islands",
+    "slug": "faroe-islands",
+    "region": "Europe",
+    "lat": 62.185604,
+    "lng": -7.058429,
+    "geometryId": null
+  },
+  {
+    "id": "FM",
+    "name": "Federated States of Micronesia",
+    "slug": "federated-states-of-micronesia",
+    "region": "Oceania",
+    "lat": 6.887553,
+    "lng": 158.234019,
+    "geometryId": null
+  },
+  {
+    "id": "FJ",
+    "name": "Fiji",
+    "slug": "fiji",
+    "region": "Oceania",
+    "lat": -17.826099,
+    "lng": 177.975427,
+    "geometryId": "FJ"
+  },
+  {
+    "id": "FI",
+    "name": "Finland",
+    "slug": "finland",
+    "region": "Europe",
+    "lat": 63.252361,
+    "lng": 27.276449,
+    "geometryId": "FI"
+  },
+  {
+    "id": "FR",
+    "name": "France",
+    "slug": "france",
+    "region": "Europe",
+    "lat": 46.696113,
+    "lng": 2.552275,
+    "geometryId": "FR"
+  },
+  {
+    "id": "PF",
+    "name": "French Polynesia",
+    "slug": "french-polynesia",
+    "region": "Oceania",
+    "lat": -17.628081,
+    "lng": -149.46157,
+    "geometryId": null
+  },
+  {
+    "id": "TF",
+    "name": "French Southern and Antarctic Lands",
+    "slug": "french-southern-and-antarctic-lands",
+    "region": "Seven seas (open ocean)",
+    "lat": -49.303721,
+    "lng": 69.122136,
+    "geometryId": "TF"
+  },
+  {
+    "id": "GA",
+    "name": "Gabon",
+    "slug": "gabon",
+    "region": "Africa",
+    "lat": -0.437739,
+    "lng": 11.835939,
+    "geometryId": "GA"
+  },
+  {
+    "id": "GE",
+    "name": "Georgia",
+    "slug": "georgia",
+    "region": "Asia",
+    "lat": 41.870087,
+    "lng": 43.735724,
+    "geometryId": "GE"
+  },
+  {
+    "id": "DE",
+    "name": "Germany",
+    "slug": "germany",
+    "region": "Europe",
+    "lat": 50.961733,
+    "lng": 9.678348,
+    "geometryId": "DE"
+  },
+  {
+    "id": "GH",
+    "name": "Ghana",
+    "slug": "ghana",
+    "region": "Africa",
+    "lat": 7.717639,
+    "lng": -1.036941,
+    "geometryId": "GH"
+  },
+  {
+    "id": "GR",
+    "name": "Greece",
+    "slug": "greece",
+    "region": "Europe",
+    "lat": 39.492763,
+    "lng": 21.72568,
+    "geometryId": "GR"
+  },
+  {
+    "id": "GL",
+    "name": "Greenland",
+    "slug": "greenland",
+    "region": "North America",
+    "lat": 74.319387,
+    "lng": -39.335251,
+    "geometryId": "GL"
+  },
+  {
+    "id": "GD",
+    "name": "Grenada",
+    "slug": "grenada",
+    "region": "North America",
+    "lat": 12.113156,
+    "lng": -61.680461,
+    "geometryId": null
+  },
+  {
+    "id": "GU",
+    "name": "Guam",
+    "slug": "guam",
+    "region": "Oceania",
+    "lat": 13.354173,
+    "lng": 144.703614,
+    "geometryId": null
+  },
+  {
+    "id": "GT",
+    "name": "Guatemala",
+    "slug": "guatemala",
+    "region": "North America",
+    "lat": 14.982133,
+    "lng": -90.497134,
+    "geometryId": "GT"
+  },
+  {
+    "id": "GG",
+    "name": "Guernsey",
+    "slug": "guernsey",
+    "region": "Europe",
+    "lat": 49.463533,
+    "lng": -2.561736,
+    "geometryId": null
+  },
+  {
+    "id": "GN",
+    "name": "Guinea",
+    "slug": "guinea",
+    "region": "Africa",
+    "lat": 10.618516,
+    "lng": -10.016402,
+    "geometryId": "GN"
+  },
+  {
+    "id": "GW",
+    "name": "Guinea-Bissau",
+    "slug": "guinea-bissau",
+    "region": "Africa",
+    "lat": 12.163712,
+    "lng": -14.52413,
+    "geometryId": "GW"
+  },
+  {
+    "id": "GY",
+    "name": "Guyana",
+    "slug": "guyana",
+    "region": "South America",
+    "lat": 5.124317,
+    "lng": -58.942643,
+    "geometryId": "GY"
+  },
+  {
+    "id": "HT",
+    "name": "Haiti",
+    "slug": "haiti",
+    "region": "North America",
+    "lat": 19.263784,
+    "lng": -72.224051,
+    "geometryId": "HT"
+  },
+  {
+    "id": "HM",
+    "name": "Heard Island and McDonald Islands",
+    "slug": "heard-island-and-mcdonald-islands",
+    "region": "Seven seas (open ocean)",
+    "lat": -53.103462,
+    "lng": 73.50521,
+    "geometryId": null
+  },
+  {
+    "id": "HN",
+    "name": "Honduras",
+    "slug": "honduras",
+    "region": "North America",
+    "lat": 14.794801,
+    "lng": -86.887604,
+    "geometryId": "HN"
+  },
+  {
+    "id": "HK",
+    "name": "Hong Kong SAR",
+    "slug": "hong-kong-sar",
+    "region": "Asia",
+    "lat": 22.448829,
+    "lng": 114.097769,
+    "geometryId": null
+  },
+  {
+    "id": "HU",
+    "name": "Hungary",
+    "slug": "hungary",
+    "region": "Europe",
+    "lat": 47.086841,
+    "lng": 19.447867,
+    "geometryId": "HU"
+  },
+  {
+    "id": "IS",
+    "name": "Iceland",
+    "slug": "iceland",
+    "region": "Europe",
+    "lat": 64.779286,
+    "lng": -18.673711,
+    "geometryId": "IS"
+  },
+  {
+    "id": "IN",
+    "name": "India",
+    "slug": "india",
+    "region": "Asia",
+    "lat": 22.686852,
+    "lng": 79.358105,
+    "geometryId": "IN"
+  },
+  {
+    "id": "ID",
+    "name": "Indonesia",
+    "slug": "indonesia",
+    "region": "Asia",
+    "lat": -0.954404,
+    "lng": 101.892949,
+    "geometryId": "ID"
+  },
+  {
+    "id": "IR",
+    "name": "Iran",
+    "slug": "iran",
+    "region": "Asia",
+    "lat": 32.166225,
+    "lng": 54.931495,
+    "geometryId": "IR"
+  },
+  {
+    "id": "IQ",
+    "name": "Iraq",
+    "slug": "iraq",
+    "region": "Asia",
+    "lat": 33.09403,
+    "lng": 43.26181,
+    "geometryId": "IQ"
+  },
+  {
+    "id": "IE",
+    "name": "Ireland",
+    "slug": "ireland",
+    "region": "Europe",
+    "lat": 53.078726,
+    "lng": -7.798588,
+    "geometryId": "IE"
+  },
+  {
+    "id": "IM",
+    "name": "Isle of Man",
+    "slug": "isle-of-man",
+    "region": "Europe",
+    "lat": 54.220833,
+    "lng": -4.530069,
+    "geometryId": null
+  },
+  {
+    "id": "IL",
+    "name": "Israel",
+    "slug": "israel",
+    "region": "Asia",
+    "lat": 30.911148,
+    "lng": 34.847915,
+    "geometryId": "IL"
+  },
+  {
+    "id": "IT",
+    "name": "Italy",
+    "slug": "italy",
+    "region": "Europe",
+    "lat": 44.732482,
+    "lng": 11.076907,
+    "geometryId": "IT"
+  },
+  {
+    "id": "JM",
+    "name": "Jamaica",
+    "slug": "jamaica",
+    "region": "North America",
+    "lat": 18.137124,
+    "lng": -77.318767,
+    "geometryId": "JM"
+  },
+  {
+    "id": "JP",
+    "name": "Japan",
+    "slug": "japan",
+    "region": "Asia",
+    "lat": 36.142538,
+    "lng": 138.44217,
+    "geometryId": "JP"
+  },
+  {
+    "id": "JE",
+    "name": "Jersey",
+    "slug": "jersey",
+    "region": "Europe",
+    "lat": 49.220808,
+    "lng": -2.090146,
+    "geometryId": null
+  },
+  {
+    "id": "JO",
+    "name": "Jordan",
+    "slug": "jordan",
+    "region": "Asia",
+    "lat": 30.805025,
+    "lng": 36.375991,
+    "geometryId": "JO"
+  },
+  {
+    "id": "KZ",
+    "name": "Kazakhstan",
+    "slug": "kazakhstan",
+    "region": "Asia",
+    "lat": 49.054149,
+    "lng": 68.685548,
+    "geometryId": "KZ"
+  },
+  {
+    "id": "KE",
+    "name": "Kenya",
+    "slug": "kenya",
+    "region": "Africa",
+    "lat": 0.549043,
+    "lng": 37.907632,
+    "geometryId": "KE"
+  },
+  {
+    "id": "KI",
+    "name": "Kiribati",
+    "slug": "kiribati",
+    "region": "Oceania",
+    "lat": 1.820437,
+    "lng": -157.384577,
+    "geometryId": null
+  },
+  {
+    "id": "KR",
+    "name": "Korea",
+    "slug": "korea",
+    "region": "Asia",
+    "lat": 36.384924,
+    "lng": 128.129504,
+    "geometryId": "KR"
+  },
+  {
+    "id": "XK",
+    "name": "Kosovo",
+    "slug": "kosovo",
+    "region": "Europe",
+    "lat": 42.593587,
+    "lng": 20.860719,
+    "geometryId": "XK"
+  },
+  {
+    "id": "KW",
+    "name": "Kuwait",
+    "slug": "kuwait",
+    "region": "Asia",
+    "lat": 29.413628,
+    "lng": 47.313999,
+    "geometryId": "KW"
+  },
+  {
+    "id": "KG",
+    "name": "Kyrgyzstan",
+    "slug": "kyrgyzstan",
+    "region": "Asia",
+    "lat": 41.66854,
+    "lng": 74.532637,
+    "geometryId": "KG"
+  },
+  {
+    "id": "LA",
+    "name": "Laos",
+    "slug": "laos",
+    "region": "Asia",
+    "lat": 19.431821,
+    "lng": 102.533912,
+    "geometryId": "LA"
+  },
+  {
+    "id": "LV",
+    "name": "Latvia",
+    "slug": "latvia",
+    "region": "Europe",
+    "lat": 57.066872,
+    "lng": 25.458723,
+    "geometryId": "LV"
+  },
+  {
+    "id": "LB",
+    "name": "Lebanon",
+    "slug": "lebanon",
+    "region": "Asia",
+    "lat": 34.133368,
+    "lng": 35.992892,
+    "geometryId": "LB"
+  },
+  {
+    "id": "LS",
+    "name": "Lesotho",
+    "slug": "lesotho",
+    "region": "Africa",
+    "lat": -29.480158,
+    "lng": 28.246639,
+    "geometryId": "LS"
+  },
+  {
+    "id": "LR",
+    "name": "Liberia",
+    "slug": "liberia",
+    "region": "Africa",
+    "lat": 6.447177,
+    "lng": -9.460379,
+    "geometryId": "LR"
+  },
+  {
+    "id": "LY",
+    "name": "Libya",
+    "slug": "libya",
+    "region": "Africa",
+    "lat": 26.638944,
+    "lng": 18.011015,
+    "geometryId": "LY"
+  },
+  {
+    "id": "LI",
+    "name": "Liechtenstein",
+    "slug": "liechtenstein",
+    "region": "Europe",
+    "lat": 47.111405,
+    "lng": 9.559439,
+    "geometryId": null
+  },
+  {
+    "id": "LT",
+    "name": "Lithuania",
+    "slug": "lithuania",
+    "region": "Europe",
+    "lat": 55.103703,
+    "lng": 24.089932,
+    "geometryId": "LT"
+  },
+  {
+    "id": "LU",
+    "name": "Luxembourg",
+    "slug": "luxembourg",
+    "region": "Europe",
+    "lat": 49.733732,
+    "lng": 6.07762,
+    "geometryId": "LU"
+  },
+  {
+    "id": "MO",
+    "name": "Macau",
+    "slug": "macau",
+    "region": "Asia",
+    "lat": 22.129735,
+    "lng": 113.556038,
+    "geometryId": null
+  },
+  {
+    "id": "MG",
+    "name": "Madagascar",
+    "slug": "madagascar",
+    "region": "Africa",
+    "lat": -18.628288,
+    "lng": 46.704241,
+    "geometryId": "MG"
+  },
+  {
+    "id": "MW",
+    "name": "Malawi",
+    "slug": "malawi",
+    "region": "Africa",
+    "lat": -13.386737,
+    "lng": 33.608082,
+    "geometryId": "MW"
+  },
+  {
+    "id": "MY",
+    "name": "Malaysia",
+    "slug": "malaysia",
+    "region": "Asia",
+    "lat": 2.528667,
+    "lng": 113.83708,
+    "geometryId": "MY"
+  },
+  {
+    "id": "MV",
+    "name": "Maldives",
+    "slug": "maldives",
+    "region": "Seven seas (open ocean)",
+    "lat": 4.174441,
+    "lng": 73.507554,
+    "geometryId": null
+  },
+  {
+    "id": "ML",
+    "name": "Mali",
+    "slug": "mali",
+    "region": "Africa",
+    "lat": 18.692713,
+    "lng": -2.038455,
+    "geometryId": "ML"
+  },
+  {
+    "id": "MT",
+    "name": "Malta",
+    "slug": "malta",
+    "region": "Europe",
+    "lat": 35.892886,
+    "lng": 14.433005,
+    "geometryId": null
+  },
+  {
+    "id": "MH",
+    "name": "Marshall Islands",
+    "slug": "marshall-islands",
+    "region": "Oceania",
+    "lat": 7.082568,
+    "lng": 171.193609,
+    "geometryId": null
+  },
+  {
+    "id": "MR",
+    "name": "Mauritania",
+    "slug": "mauritania",
+    "region": "Africa",
+    "lat": 19.587062,
+    "lng": -9.740299,
+    "geometryId": "MR"
+  },
+  {
+    "id": "MU",
+    "name": "Mauritius",
+    "slug": "mauritius",
+    "region": "Seven seas (open ocean)",
+    "lat": -20.299506,
+    "lng": 57.565848,
+    "geometryId": null
+  },
+  {
+    "id": "MX",
+    "name": "Mexico",
+    "slug": "mexico",
+    "region": "North America",
+    "lat": 23.919988,
+    "lng": -102.289448,
+    "geometryId": "MX"
+  },
+  {
+    "id": "MD",
+    "name": "Moldova",
+    "slug": "moldova",
+    "region": "Europe",
+    "lat": 47.434999,
+    "lng": 28.487904,
+    "geometryId": "MD"
+  },
+  {
+    "id": "MC",
+    "name": "Monaco",
+    "slug": "monaco",
+    "region": "Europe",
+    "lat": 43.739652,
+    "lng": 7.398291,
+    "geometryId": null
+  },
+  {
+    "id": "MN",
+    "name": "Mongolia",
+    "slug": "mongolia",
+    "region": "Asia",
+    "lat": 45.997488,
+    "lng": 104.150405,
+    "geometryId": "MN"
+  },
+  {
+    "id": "ME",
+    "name": "Montenegro",
+    "slug": "montenegro",
+    "region": "Europe",
+    "lat": 42.803101,
+    "lng": 19.143727,
+    "geometryId": "ME"
+  },
+  {
+    "id": "MS",
+    "name": "Montserrat",
+    "slug": "montserrat",
+    "region": "North America",
+    "lat": 16.73717,
+    "lng": -62.188252,
+    "geometryId": null
+  },
+  {
+    "id": "MA",
+    "name": "Morocco",
+    "slug": "morocco",
+    "region": "Africa",
+    "lat": 31.650723,
+    "lng": -7.187296,
+    "geometryId": "MA"
+  },
+  {
+    "id": "MZ",
+    "name": "Mozambique",
+    "slug": "mozambique",
+    "region": "Africa",
+    "lat": -13.94323,
+    "lng": 37.83789,
+    "geometryId": "MZ"
+  },
+  {
+    "id": "MM",
+    "name": "Myanmar",
+    "slug": "myanmar",
+    "region": "Asia",
+    "lat": 21.573855,
+    "lng": 95.804497,
+    "geometryId": "MM"
+  },
+  {
+    "id": "NA",
+    "name": "Namibia",
+    "slug": "namibia",
+    "region": "Africa",
+    "lat": -20.575298,
+    "lng": 17.108166,
+    "geometryId": "NA"
+  },
+  {
+    "id": "NR",
+    "name": "Nauru",
+    "slug": "nauru",
+    "region": "Oceania",
+    "lat": -0.520261,
+    "lng": 166.932644,
+    "geometryId": null
+  },
+  {
+    "id": "NP",
+    "name": "Nepal",
+    "slug": "nepal",
+    "region": "Asia",
+    "lat": 28.297925,
+    "lng": 83.639914,
+    "geometryId": "NP"
+  },
+  {
+    "id": "NL",
+    "name": "Netherlands",
+    "slug": "netherlands",
+    "region": "Europe",
+    "lat": 52.422211,
+    "lng": 5.61144,
+    "geometryId": "NL"
+  },
+  {
+    "id": "NC",
+    "name": "New Caledonia",
+    "slug": "new-caledonia",
+    "region": "Oceania",
+    "lat": -21.064697,
+    "lng": 165.084004,
+    "geometryId": "NC"
+  },
+  {
+    "id": "NZ",
+    "name": "New Zealand",
+    "slug": "new-zealand",
+    "region": "Oceania",
+    "lat": -39.759,
+    "lng": 172.787,
+    "geometryId": "NZ"
+  },
+  {
+    "id": "NI",
+    "name": "Nicaragua",
+    "slug": "nicaragua",
+    "region": "North America",
+    "lat": 12.670697,
+    "lng": -85.069347,
+    "geometryId": "NI"
+  },
+  {
+    "id": "NE",
+    "name": "Niger",
+    "slug": "niger",
+    "region": "Africa",
+    "lat": 17.446195,
+    "lng": 9.504356,
+    "geometryId": "NE"
+  },
+  {
+    "id": "NG",
+    "name": "Nigeria",
+    "slug": "nigeria",
+    "region": "Africa",
+    "lat": 9.439799,
+    "lng": 7.50322,
+    "geometryId": "NG"
+  },
+  {
+    "id": "NU",
+    "name": "Niue",
+    "slug": "niue",
+    "region": "Oceania",
+    "lat": -19.045956,
+    "lng": -169.862565,
+    "geometryId": null
+  },
+  {
+    "id": "NF",
+    "name": "Norfolk Island",
+    "slug": "norfolk-island",
+    "region": "Oceania",
+    "lat": -29.033042,
+    "lng": 167.954531,
+    "geometryId": null
+  },
+  {
+    "id": "KP",
+    "name": "North Korea",
+    "slug": "north-korea",
+    "region": "Asia",
+    "lat": 39.885252,
+    "lng": 126.444516,
+    "geometryId": "KP"
+  },
+  {
+    "id": "MK",
+    "name": "North Macedonia",
+    "slug": "north-macedonia",
+    "region": "Europe",
+    "lat": 41.558223,
+    "lng": 21.555839,
+    "geometryId": "MK"
+  },
+  {
+    "id": "MP",
+    "name": "Northern Mariana Islands",
+    "slug": "northern-mariana-islands",
+    "region": "Oceania",
+    "lat": 15.188188,
+    "lng": 145.734397,
+    "geometryId": null
+  },
+  {
+    "id": "NO",
+    "name": "Norway",
+    "slug": "norway",
+    "region": "Europe",
+    "lat": 61.357092,
+    "lng": 9.679975,
+    "geometryId": "NO"
+  },
+  {
+    "id": "OM",
+    "name": "Oman",
+    "slug": "oman",
+    "region": "Asia",
+    "lat": 22.120427,
+    "lng": 57.336553,
+    "geometryId": "OM"
+  },
+  {
+    "id": "PK",
+    "name": "Pakistan",
+    "slug": "pakistan",
+    "region": "Asia",
+    "lat": 29.328389,
+    "lng": 68.545632,
+    "geometryId": "PK"
+  },
+  {
+    "id": "PW",
+    "name": "Palau",
+    "slug": "palau",
+    "region": "Oceania",
+    "lat": 7.518252,
+    "lng": 134.580157,
+    "geometryId": null
+  },
+  {
+    "id": "PS",
+    "name": "Palestine",
+    "slug": "palestine",
+    "region": "Asia",
+    "lat": 32.047431,
+    "lng": 35.291341,
+    "geometryId": "PS"
+  },
+  {
+    "id": "PA",
+    "name": "Panama",
+    "slug": "panama",
+    "region": "North America",
+    "lat": 8.72198,
+    "lng": -80.352106,
+    "geometryId": "PA"
+  },
+  {
+    "id": "PG",
+    "name": "Papua New Guinea",
+    "slug": "papua-new-guinea",
+    "region": "Oceania",
+    "lat": -5.695285,
+    "lng": 143.910216,
+    "geometryId": "PG"
+  },
+  {
+    "id": "PY",
+    "name": "Paraguay",
+    "slug": "paraguay",
+    "region": "South America",
+    "lat": -21.674509,
+    "lng": -60.146394,
+    "geometryId": "PY"
+  },
+  {
+    "id": "PE",
+    "name": "Peru",
+    "slug": "peru",
+    "region": "South America",
+    "lat": -12.976679,
+    "lng": -72.90016,
+    "geometryId": "PE"
+  },
+  {
+    "id": "PH",
+    "name": "Philippines",
+    "slug": "philippines",
+    "region": "Asia",
+    "lat": 11.198,
+    "lng": 122.465,
+    "geometryId": "PH"
+  },
+  {
+    "id": "PN",
+    "name": "Pitcairn Islands",
+    "slug": "pitcairn-islands",
+    "region": "Oceania",
+    "lat": -24.364576,
+    "lng": -128.317536,
+    "geometryId": null
+  },
+  {
+    "id": "PL",
+    "name": "Poland",
+    "slug": "poland",
+    "region": "Europe",
+    "lat": 51.990316,
+    "lng": 19.490468,
+    "geometryId": "PL"
+  },
+  {
+    "id": "PT",
+    "name": "Portugal",
+    "slug": "portugal",
+    "region": "Europe",
+    "lat": 39.606675,
+    "lng": -8.271754,
+    "geometryId": "PT"
+  },
+  {
+    "id": "PR",
+    "name": "Puerto Rico",
+    "slug": "puerto-rico",
+    "region": "North America",
+    "lat": 18.234668,
+    "lng": -66.481065,
+    "geometryId": "PR"
+  },
+  {
+    "id": "QA",
+    "name": "Qatar",
+    "slug": "qatar",
+    "region": "Asia",
+    "lat": 25.237383,
+    "lng": 51.143509,
+    "geometryId": "QA"
+  },
+  {
+    "id": "CG",
+    "name": "Republic of the Congo",
+    "slug": "republic-of-the-congo",
+    "region": "Africa",
+    "lat": 0.142331,
+    "lng": 15.9005,
+    "geometryId": "CG"
+  },
+  {
+    "id": "RO",
+    "name": "Romania",
+    "slug": "romania",
+    "region": "Europe",
+    "lat": 45.733237,
+    "lng": 24.972624,
+    "geometryId": "RO"
+  },
+  {
+    "id": "RU",
+    "name": "Russia",
+    "slug": "russia",
+    "region": "Europe",
+    "lat": 58.249357,
+    "lng": 44.686469,
+    "geometryId": "RU"
+  },
+  {
+    "id": "RW",
+    "name": "Rwanda",
+    "slug": "rwanda",
+    "region": "Africa",
+    "lat": -1.897196,
+    "lng": 30.103894,
+    "geometryId": "RW"
+  },
+  {
+    "id": "BL",
+    "name": "Saint Barthélemy",
+    "slug": "saint-barthelemy",
+    "region": "North America",
+    "lat": 17.901987,
+    "lng": -62.833193,
+    "geometryId": null
+  },
+  {
+    "id": "SH",
+    "name": "Saint Helena",
+    "slug": "saint-helena",
+    "region": "Seven seas (open ocean)",
+    "lat": -15.950487,
+    "lng": -5.71262,
+    "geometryId": null
+  },
+  {
+    "id": "KN",
+    "name": "Saint Kitts and Nevis",
+    "slug": "saint-kitts-and-nevis",
+    "region": "North America",
+    "lat": 17.336558,
+    "lng": -62.757975,
+    "geometryId": null
+  },
+  {
+    "id": "LC",
+    "name": "Saint Lucia",
+    "slug": "saint-lucia",
+    "region": "North America",
+    "lat": 13.892371,
+    "lng": -60.980094,
+    "geometryId": null
+  },
+  {
+    "id": "MF",
+    "name": "Saint Martin",
+    "slug": "saint-martin",
+    "region": "North America",
+    "lat": 18.081302,
+    "lng": -63.049399,
+    "geometryId": null
+  },
+  {
+    "id": "PM",
+    "name": "Saint Pierre and Miquelon",
+    "slug": "saint-pierre-and-miquelon",
+    "region": "North America",
+    "lat": 47.040344,
+    "lng": -56.332352,
+    "geometryId": null
+  },
+  {
+    "id": "VC",
+    "name": "Saint Vincent and the Grenadines",
+    "slug": "saint-vincent-and-the-grenadines",
+    "region": "North America",
+    "lat": 13.0879,
+    "lng": -61.3359,
+    "geometryId": null
+  },
+  {
+    "id": "WS",
+    "name": "Samoa",
+    "slug": "samoa",
+    "region": "Oceania",
+    "lat": -13.639139,
+    "lng": -172.438241,
+    "geometryId": null
+  },
+  {
+    "id": "SM",
+    "name": "San Marino",
+    "slug": "san-marino",
+    "region": "Europe",
+    "lat": 43.933916,
+    "lng": 12.441206,
+    "geometryId": null
+  },
+  {
+    "id": "SA",
+    "name": "Saudi Arabia",
+    "slug": "saudi-arabia",
+    "region": "Asia",
+    "lat": 23.806908,
+    "lng": 44.6996,
+    "geometryId": "SA"
+  },
+  {
+    "id": "SN",
+    "name": "Senegal",
+    "slug": "senegal",
+    "region": "Africa",
+    "lat": 15.138125,
+    "lng": -14.778586,
+    "geometryId": "SN"
+  },
+  {
+    "id": "RS",
+    "name": "Serbia",
+    "slug": "serbia",
+    "region": "Europe",
+    "lat": 44.189919,
+    "lng": 20.787989,
+    "geometryId": "RS"
+  },
+  {
+    "id": "SC",
+    "name": "Seychelles",
+    "slug": "seychelles",
+    "region": "Seven seas (open ocean)",
+    "lat": -4.676659,
+    "lng": 55.480175,
+    "geometryId": null
+  },
+  {
+    "id": "KAS",
+    "name": "Siachen Glacier",
+    "slug": "siachen-glacier",
+    "region": "Asia",
+    "lat": 35.340606,
+    "lng": 77.129553,
+    "geometryId": null
+  },
+  {
+    "id": "SL",
+    "name": "Sierra Leone",
+    "slug": "sierra-leone",
+    "region": "Africa",
+    "lat": 8.617449,
+    "lng": -11.763677,
+    "geometryId": "SL"
+  },
+  {
+    "id": "SG",
+    "name": "Singapore",
+    "slug": "singapore",
+    "region": "Asia",
+    "lat": 1.366587,
+    "lng": 103.816925,
+    "geometryId": null
+  },
+  {
+    "id": "SX",
+    "name": "Sint Maarten",
+    "slug": "sint-maarten",
+    "region": "North America",
+    "lat": 18.04088,
+    "lng": -63.070133,
+    "geometryId": null
+  },
+  {
+    "id": "SK",
+    "name": "Slovakia",
+    "slug": "slovakia",
+    "region": "Europe",
+    "lat": 48.734044,
+    "lng": 19.049868,
+    "geometryId": "SK"
+  },
+  {
+    "id": "SI",
+    "name": "Slovenia",
+    "slug": "slovenia",
+    "region": "Europe",
+    "lat": 46.06076,
+    "lng": 14.915312,
+    "geometryId": "SI"
+  },
+  {
+    "id": "SB",
+    "name": "Solomon Islands",
+    "slug": "solomon-islands",
+    "region": "Oceania",
+    "lat": -8.029548,
+    "lng": 159.170468,
+    "geometryId": "SB"
+  },
+  {
+    "id": "SO",
+    "name": "Somalia",
+    "slug": "somalia",
+    "region": "Africa",
+    "lat": 3.568925,
+    "lng": 45.19238,
+    "geometryId": "SO"
+  },
+  {
+    "id": "SOL",
+    "name": "Somaliland",
+    "slug": "somaliland",
+    "region": "Africa",
+    "lat": 9.443889,
+    "lng": 46.731595,
+    "geometryId": "SOL"
+  },
+  {
+    "id": "ZA",
+    "name": "South Africa",
+    "slug": "south-africa",
+    "region": "Africa",
+    "lat": -29.708776,
+    "lng": 23.665734,
+    "geometryId": "ZA"
+  },
+  {
+    "id": "GS",
+    "name": "South Georgia and the South Sandwich Islands",
+    "slug": "south-georgia-and-the-south-sandwich-islands",
+    "region": "Seven seas (open ocean)",
+    "lat": -55.683402,
+    "lng": -31.063179,
+    "geometryId": null
+  },
+  {
+    "id": "SS",
+    "name": "South Sudan",
+    "slug": "south-sudan",
+    "region": "Africa",
+    "lat": 7.230477,
+    "lng": 30.390151,
+    "geometryId": "SS"
+  },
+  {
+    "id": "ES",
+    "name": "Spain",
+    "slug": "spain",
+    "region": "Europe",
+    "lat": 40.090953,
+    "lng": -3.464718,
+    "geometryId": "ES"
+  },
+  {
+    "id": "LK",
+    "name": "Sri Lanka",
+    "slug": "sri-lanka",
+    "region": "Asia",
+    "lat": 7.581097,
+    "lng": 80.704823,
+    "geometryId": "LK"
+  },
+  {
+    "id": "SD",
+    "name": "Sudan",
+    "slug": "sudan",
+    "region": "Africa",
+    "lat": 16.330746,
+    "lng": 29.260657,
+    "geometryId": "SD"
+  },
+  {
+    "id": "SR",
+    "name": "Suriname",
+    "slug": "suriname",
+    "region": "South America",
+    "lat": 4.143987,
+    "lng": -55.91094,
+    "geometryId": "SR"
+  },
+  {
+    "id": "SE",
+    "name": "Sweden",
+    "slug": "sweden",
+    "region": "Europe",
+    "lat": 65.85918,
+    "lng": 19.01705,
+    "geometryId": "SE"
+  },
+  {
+    "id": "CH",
+    "name": "Switzerland",
+    "slug": "switzerland",
+    "region": "Europe",
+    "lat": 46.719114,
+    "lng": 7.463965,
+    "geometryId": "CH"
+  },
+  {
+    "id": "SY",
+    "name": "Syria",
+    "slug": "syria",
+    "region": "Asia",
+    "lat": 35.006636,
+    "lng": 38.277783,
+    "geometryId": "SY"
+  },
+  {
+    "id": "ST",
+    "name": "São Tomé and Príncipe",
+    "slug": "sao-tome-and-principe",
+    "region": "Africa",
+    "lat": 0.9709,
+    "lng": 7.021,
+    "geometryId": null
+  },
+  {
+    "id": "TW",
+    "name": "Taiwan",
+    "slug": "taiwan",
+    "region": "Asia",
+    "lat": 23.652408,
+    "lng": 120.868204,
+    "geometryId": "TW"
+  },
+  {
+    "id": "TJ",
+    "name": "Tajikistan",
+    "slug": "tajikistan",
+    "region": "Asia",
+    "lat": 38.199835,
+    "lng": 72.587276,
+    "geometryId": "TJ"
+  },
+  {
+    "id": "TZ",
+    "name": "Tanzania",
+    "slug": "tanzania",
+    "region": "Africa",
+    "lat": -6.051866,
+    "lng": 34.959183,
+    "geometryId": "TZ"
+  },
+  {
+    "id": "TH",
+    "name": "Thailand",
+    "slug": "thailand",
+    "region": "Asia",
+    "lat": 15.45974,
+    "lng": 101.073198,
+    "geometryId": "TH"
+  },
+  {
+    "id": "BS",
+    "name": "The Bahamas",
+    "slug": "the-bahamas",
+    "region": "North America",
+    "lat": 26.401789,
+    "lng": -77.146688,
+    "geometryId": "BS"
+  },
+  {
+    "id": "GM",
+    "name": "The Gambia",
+    "slug": "the-gambia",
+    "region": "Africa",
+    "lat": 13.641721,
+    "lng": -14.998318,
+    "geometryId": "GM"
+  },
+  {
+    "id": "TG",
+    "name": "Togo",
+    "slug": "togo",
+    "region": "Africa",
+    "lat": 8.80722,
+    "lng": 1.058113,
+    "geometryId": "TG"
+  },
+  {
+    "id": "TO",
+    "name": "Tonga",
+    "slug": "tonga",
+    "region": "Oceania",
+    "lat": -21.210026,
+    "lng": -175.163014,
+    "geometryId": null
+  },
+  {
+    "id": "TT",
+    "name": "Trinidad and Tobago",
+    "slug": "trinidad-and-tobago",
+    "region": "North America",
+    "lat": 10.9989,
+    "lng": -60.9184,
+    "geometryId": "TT"
+  },
+  {
+    "id": "TN",
+    "name": "Tunisia",
+    "slug": "tunisia",
+    "region": "Africa",
+    "lat": 33.687263,
+    "lng": 9.007881,
+    "geometryId": "TN"
+  },
+  {
+    "id": "CYN",
+    "name": "Turkish Republic of Northern Cyprus",
+    "slug": "turkish-republic-of-northern-cyprus",
+    "region": "Asia",
+    "lat": 35.216071,
+    "lng": 33.692434,
+    "geometryId": "CYN"
+  },
+  {
+    "id": "TM",
+    "name": "Turkmenistan",
+    "slug": "turkmenistan",
+    "region": "Asia",
+    "lat": 39.855246,
+    "lng": 58.676647,
+    "geometryId": "TM"
+  },
+  {
+    "id": "TC",
+    "name": "Turks and Caicos Islands",
+    "slug": "turks-and-caicos-islands",
+    "region": "North America",
+    "lat": 21.81663,
+    "lng": -71.752704,
+    "geometryId": null
+  },
+  {
+    "id": "TV",
+    "name": "Tuvalu",
+    "slug": "tuvalu",
+    "region": "Oceania",
+    "lat": -8.513717,
+    "lng": 179.209587,
+    "geometryId": null
+  },
+  {
+    "id": "TR",
+    "name": "Türkiye",
+    "slug": "turkiye",
+    "region": "Asia",
+    "lat": 39.345388,
+    "lng": 34.508268,
+    "geometryId": "TR"
+  },
+  {
+    "id": "UG",
+    "name": "Uganda",
+    "slug": "uganda",
+    "region": "Africa",
+    "lat": 1.972589,
+    "lng": 32.948555,
+    "geometryId": "UG"
+  },
+  {
+    "id": "UA",
+    "name": "Ukraine",
+    "slug": "ukraine",
+    "region": "Europe",
+    "lat": 49.724739,
+    "lng": 32.140865,
+    "geometryId": "UA"
+  },
+  {
+    "id": "AE",
+    "name": "United Arab Emirates",
+    "slug": "united-arab-emirates",
+    "region": "Asia",
+    "lat": 23.466285,
+    "lng": 54.547256,
+    "geometryId": "AE"
+  },
+  {
+    "id": "GB",
+    "name": "United Kingdom",
+    "slug": "united-kingdom",
+    "region": "Europe",
+    "lat": 54.402739,
+    "lng": -2.116346,
+    "geometryId": "GB"
+  },
+  {
+    "id": "US",
+    "name": "United States",
+    "slug": "united-states",
+    "region": "North America",
+    "lat": 39.538479,
+    "lng": -97.482602,
+    "geometryId": "US"
+  },
+  {
+    "id": "VI",
+    "name": "United States Virgin Islands",
+    "slug": "united-states-virgin-islands",
+    "region": "North America",
+    "lat": 17.746706,
+    "lng": -64.779172,
+    "geometryId": null
+  },
+  {
+    "id": "UY",
+    "name": "Uruguay",
+    "slug": "uruguay",
+    "region": "South America",
+    "lat": -32.961127,
+    "lng": -55.966942,
+    "geometryId": "UY"
+  },
+  {
+    "id": "UZ",
+    "name": "Uzbekistan",
+    "slug": "uzbekistan",
+    "region": "Asia",
+    "lat": 41.693603,
+    "lng": 64.005429,
+    "geometryId": "UZ"
+  },
+  {
+    "id": "VU",
+    "name": "Vanuatu",
+    "slug": "vanuatu",
+    "region": "Oceania",
+    "lat": -15.37153,
+    "lng": 166.908762,
+    "geometryId": "VU"
+  },
+  {
+    "id": "VA",
+    "name": "Vatican City",
+    "slug": "vatican-city",
+    "region": "Europe",
+    "lat": 41.903323,
+    "lng": 12.453418,
+    "geometryId": null
+  },
+  {
+    "id": "VE",
+    "name": "Venezuela",
+    "slug": "venezuela",
+    "region": "South America",
+    "lat": 7.182476,
+    "lng": -64.599381,
+    "geometryId": "VE"
+  },
+  {
+    "id": "VN",
+    "name": "Vietnam",
+    "slug": "vietnam",
+    "region": "Asia",
+    "lat": 21.715416,
+    "lng": 105.387292,
+    "geometryId": "VN"
+  },
+  {
+    "id": "WF",
+    "name": "Wallis and Futuna",
+    "slug": "wallis-and-futuna",
+    "region": "Oceania",
+    "lat": -14.286415,
+    "lng": -178.137436,
+    "geometryId": null
+  },
+  {
+    "id": "EH",
+    "name": "Western Sahara",
+    "slug": "western-sahara",
+    "region": "Africa",
+    "lat": 23.967592,
+    "lng": -12.630304,
+    "geometryId": "EH"
+  },
+  {
+    "id": "YE",
+    "name": "Yemen",
+    "slug": "yemen",
+    "region": "Asia",
+    "lat": 15.328226,
+    "lng": 45.874383,
+    "geometryId": "YE"
+  },
+  {
+    "id": "ZM",
+    "name": "Zambia",
+    "slug": "zambia",
+    "region": "Africa",
+    "lat": -14.660804,
+    "lng": 26.395298,
+    "geometryId": "ZM"
+  },
+  {
+    "id": "ZW",
+    "name": "Zimbabwe",
+    "slug": "zimbabwe",
+    "region": "Africa",
+    "lat": -18.91164,
+    "lng": 29.925444,
+    "geometryId": "ZW"
+  },
+  {
+    "id": "AX",
+    "name": "Åland",
+    "slug": "aland",
+    "region": "Europe",
+    "lat": 60.156467,
+    "lng": 19.869671,
+    "geometryId": null
+  }
+]
