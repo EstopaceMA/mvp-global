@@ -1,12 +1,45 @@
+<div align="center">
+
+<img src="public/mvp-logo.png" alt="MVP Global logo" width="72" />
+
 # MVP Global — the community atlas
 
-Next.js App Router, TypeScript, shadcn/ui, Tailwind CSS, and [Magic UI’s Globe](https://magicui.design/docs/components/globe), powered by COBE. The bundled [snapshot manifest](src/data/manifest.json) records the current collection date, profile total, and country coverage. All profiles are available without WebGL through the directory.
+An interactive globe and accessible directory of Microsoft Most Valuable Professionals around the world.
 
-The project includes the [apple-design skill](../.agents/skills/apple-design/SKILL.md), pinned in `../skills-lock.json`. Its interface guidance is applied through readable type, 44px touch controls, immediate press feedback, translucent panels, and reduced-motion, reduced-transparency, and increased-contrast preferences. The MVP logo and the atlas’s navy/blue identity are retained.
+[![Data refresh](https://img.shields.io/github/actions/workflow/status/EstopaceMA/mvp-site/refresh-mvp-data.yml?branch=main&label=data%20refresh)](../../actions/workflows/refresh-mvp-data.yml)
+[![Node](https://img.shields.io/badge/node-%E2%89%A520.9-339933?logo=node.js&logoColor=white)](package.json)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js&logoColor=white)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](tsconfig.json)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## Run locally
+[Overview](#overview) • [Features](#features) • [Getting started](#getting-started) • [Explore](#explore) • [Refreshing the data](#refreshing-the-data) • [Testing](#testing)
 
-Use Node.js 20.9 or newer and npm:
+</div>
+
+## Overview
+
+MVP Global turns the public [Microsoft MVP directory](https://mvp.microsoft.com/en-US/search?target=Profile&program=MVP) into an explorable atlas: a dotted 3D globe built with [Magic UI's Globe](https://magicui.design/docs/components/globe) and [COBE](https://cobe.vercel.app/), backed by a fully accessible directory that needs no WebGL. It's a Next.js App Router site written in TypeScript, styled with Tailwind CSS and shadcn/ui, and ships as a static snapshot — no database, API keys, or Microsoft credentials required to run it.
+
+> [!NOTE]
+> MVP Global is an independent community project, not an official Microsoft product. "Microsoft" and "Microsoft MVP" are trademarks of Microsoft. Profile content and photos belong to their respective owners and are linked back to the [official directory](https://mvp.microsoft.com/en-US/search?target=Profile&program=MVP).
+
+## Features
+
+- **Interactive globe** — logarithmic marker sizing and coloring, country highlights, drag-to-rotate, and reduced-motion support.
+- **Accessible directory** — every profile is reachable without WebGL, with keyboard navigation and 24 results per page.
+- **Shareable country pages** — deep links like `/countries/hong-kong-sar`, including small territories without a globe polygon.
+- **Composable search & filters** — country, award category, technology, and region combine through URL state (`?country=philippines&country=singapore`), with browser history and persisted theme.
+- **Zero-config to run** — the bundled snapshot means `npm ci && npm run dev` is all it takes; no environment variables or backend.
+- **Self-refreshing data** — a monthly GitHub Actions workflow scrapes, validates, and opens a pull request with the updated snapshot.
+
+## Getting started
+
+### Prerequisites
+
+- Node.js 20.9 or newer
+- npm
+
+### Run locally
 
 ```sh
 cd mvp-site
@@ -14,102 +47,58 @@ npm ci
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000). No environment variables, database, scraper files, or Microsoft credentials are needed.
+Open [localhost:3000](http://localhost:3000). No environment variables, database, scraper files, or Microsoft credentials are needed — the app runs entirely from the [bundled snapshot](src/data/manifest.json).
 
-## Pages and interactions
+## Explore
 
-- `/`: interactive dotted globe, logarithmic marker sizes and colors, country highlights, search and filters. Select a polygon, marker, or country picker entry. Desktop results use a non-modal side sheet; mobile results use a modal bottom sheet. On mobile, finish typing and press Enter or View MVPs to open search results.
-- `/mvps`: accessible directory with alphabetical cards and 24 results per page.
-- `/countries/[country]`: shareable country pages, including small territories such as `/countries/hong-kong-sar`.
-- `/about`: snapshot coverage, source, independence, and map attribution.
+| Route | Description |
+| --- | --- |
+| `/` | The interactive globe: search, filters, and country selection. Desktop shows a side sheet; mobile shows a bottom sheet. |
+| `/mvps` | The accessible directory, with alphabetical cards. |
+| `/countries/[country]` | Shareable, per-country pages. |
+| `/about` | Snapshot coverage, data source, and attribution. |
 
-Search matches names, countries, regions, award categories, and technologies, ignoring case and accents. Selections within each filter combine with OR; different filters combine with AND. Selecting a country narrows the cards while preserving matching counts elsewhere on the globe. State uses `q`, `country`, `category`, `technology`, `region`, and `page` URL parameters and supports browser history. Multiple selections repeat the same parameter, such as `country=philippines&country=singapore`; existing single-selection links still work. Theme preference persists locally.
+Search matches names, countries, regions, award categories, and technologies, ignoring case and accents. Selections within a filter combine with OR, and different filters combine with AND — selecting a country narrows the directory while the globe keeps showing counts for everything else.
 
-Country and Award category are the primary filters; technology expertise and region are under Filters. All four use the same searchable multi-select design, with accent-insensitive label search, checkboxes, and contextual counts. Searching a dropdown only narrows its options. Toggle several options without closing it, then choose Done or press Escape. Closing a nested picker returns focus to its trigger and keeps Filters open. On the mobile globe, finish selecting filters and use View MVPs to open results.
+## Refreshing the data
 
-The Filters badge counts individual technology and region selections; Reset these filters clears only those fields. Option counts apply every criterion except that option’s entire filter. “All” clears the field and shows its unique-profile total, which can be smaller than the sum of overlapping option counts. Selections stay inside the dropdowns, keeping the globe clear of filter chips. Clear all appears below Reset these filters in the Filters panel whenever a criterion is active and resets every field. Use each dropdown’s Clear selections or toggle individual options to remove selections. Adding another country or removing the country from a country page navigates to `/mvps`, preserving other criteria. Empty results offer up to three positive whole-filter removals, prioritizing preservation of technology selections. Pending counts display as unavailable rather than showing stale values or zero.
-
-The country picker includes source locations plus mapped places without recorded profiles. Camera positions represent countries, not individual MVP locations. WebGL failure and context loss expose a directory link with the current filters. Reduced motion disables camera transitions; rendering pauses when the document is hidden. Missing or failed photos show initials.
-
-## Refresh the snapshot
-
-Run the independent [scraper](mvp-scraper/README.md) in `mvp-site/mvp-scraper/` first, then explicitly import from `mvp-site/`:
+The site never talks to Microsoft at build or request time — it reads a prepared, version-controlled snapshot. A separate, independent scraper package collects that snapshot:
 
 ```sh
-cd mvp-site
+# 1. Scrape a fresh export (see mvp-scraper/README.md)
+cd mvp-scraper
+npm run scrape -- --enrich
+
+# 2. Import it into the site
+cd ../mvp-site
 npm run data:import
-# Or use a complete export elsewhere:
-npm run data:import -- --source /absolute/path/to/mvps.json
-npm test
-npm run build
 ```
 
-The default import source is `mvp-scraper/data/mvps.json`. The scraper keeps its own dependencies and TypeScript configuration; frontend typechecking and linting exclude that package. Run its checks with `npm --prefix mvp-scraper run typecheck` and `npm --prefix mvp-scraper test`.
+The importer validates the export — rejecting duplicate IDs, inconsistent coverage totals, unknown country labels, unexpected image hosts, and invalid profile links — before writing `src/data/profiles.json`, `src/data/manifest.json`, and a content-hashed `public/data/directory.<hash>.json`. All three are committed together.
 
-The importer requires a complete, enriched, unfiltered export. It rejects duplicate IDs, inconsistent coverage totals, unknown country labels, unexpected image hosts, and invalid official profile links. Source Microsoft GUIDs remain profile identifiers. New source country labels require an explicit entry in `src/data/countries.json` before import succeeds.
+> [!IMPORTANT]
+> New source country labels need an explicit entry in [`src/data/countries.json`](src/data/countries.json) before import will succeed.
 
-Keep these generated files in source control together:
+### Automated monthly refresh
 
-- `src/data/profiles.json`: server-rendered initial card data.
-- `src/data/manifest.json`: counts, filter options, coverage, timestamp, and content version.
-- `public/data/directory.<hash>.json`: compact browser dataset, fetched once and reused across views.
+The [Refresh MVP data](.github/workflows/refresh-mvp-data.yml) workflow runs on the 2nd of each month (08:17 Asia/Manila), scrapes a complete export, and — only if profiles actually changed — opens a pull request from `automation/refresh-mvp-data` into `main` after tests, typecheck, lint, and the production build all pass. It can also be triggered manually from **Actions → Refresh MVP data → Run workflow**. Review and merge the PR like any other change; nothing is published automatically.
 
-Deployments read only these prepared files. The build never runs the scraper or fetches directory data from Microsoft. Photos load lazily through Next.js image optimization, restricted to `images.mvp.microsoft.com`. Older content-hashed browser snapshots may be retained across updates for clients with previously cached pages.
-
-Country metadata, region assignments, and camera coordinates are explicit in `src/data/countries.json`. Simplified Natural Earth boundaries are bundled in `public/geo/countries.topo.json`; [map attribution](public/geo/ATTRIBUTION.md) records their origin. Small territories without polygons remain available as markers and picker entries. The Magic UI globe uses COBE for the dotted globe, with a projected SVG overlay for all covered countries (avoiding the renderer’s 64-marker limit). Natural Earth geometry powers land selection and hovered/selected country outlines. Drag to rotate, scroll or pinch to zoom, and use the zoom/reset controls. Camera movement uses interruptible Motion springs.
-
-## Monthly refresh pull requests
-
-[Refresh MVP data](.github/workflows/refresh-mvp-data.yml) runs on the **2nd day of each month at 08:17 Asia/Manila** (00:17 UTC; cron `17 0 2 * *`). GitHub may delay scheduled jobs. The workflow must be merged into `main` before the schedule is active. To run it manually, open **Actions → Refresh MVP data → Run workflow**, selecting `main`.
-
-Each run installs both packages from their lockfiles on Node.js 24, checks the scraper, and collects a fresh complete export with enrichment at one request start per second. There is no checkpoint reuse between runs. The scraper step allows 150 minutes, within a 180-minute job timeout; overlapping runs are serialized.
-
-The importer validates coverage before comparing published profiles by ID. Observation timestamps, profile order, and category/technology ordering do not count as changes. If profiles are unchanged, the workflow leaves all snapshot files and their collection date untouched and skips PR creation/update. The Actions run summary records the successful check date instead.
-
-For changed profiles, site tests, typecheck, lint, and the production build must pass before the workflow creates or updates **`automation/refresh-mvp-data` → `main`**. The PR includes added, updated, and removed counts, before/after totals, the collection date, and a run link. Only `src/data/profiles.json`, `src/data/manifest.json`, and `public/data/directory.*.json` are committed. Published older browser datasets are retained; raw exports, checkpoints, dependencies, and reports are excluded. Review and merge the PR manually. A failed or unchanged run leaves any existing data PR untouched.
-
-The workflow uses GitHub's automatically supplied `GITHUB_TOKEN`, with `contents: write` and `pull-requests: write`. The repository setting **Actions → General → Allow GitHub Actions to create and approve pull requests** must be enabled. No personal token or additional secret is required. All refresh checks run before PR creation, without depending on a second PR-triggered workflow.
-
-To use the same import behavior locally after a scrape:
+## Testing
 
 ```sh
-npm run data:import -- --skip-unchanged
-# Optionally write a machine-readable change report outside the repository:
-npm run data:import -- --skip-unchanged --report /tmp/mvp-refresh-report.json
-```
-
-Without `--skip-unchanged`, a manual import retains its existing behavior and updates the collection date even when profiles match. No snapshot format changes are introduced.
-
-On failure, inspect the failed step and its logs in Actions, resolve the source/schema or country-mapping issue, and rerun manually. Partial exports are never published; the live site and existing PR remain unchanged. The monthly checks use synthetic data for fixed filter scenarios and verify the new snapshot's totals and assets independently of any historical MVP count.
-
-## Verification
-
-```sh
-npm test
+npm test              # unit tests: projection, filtering, snapshot validation, URL state...
 npm run typecheck
 npm run lint
 npm run build
 npx playwright install chromium
-npm run test:e2e
+npm run test:e2e      # desktop + mobile, real WebGL, accessibility checks
 ```
 
-Unit tests cover globe projection, land hit detection, camera wrapping, snapshot validation, country mapping, reconciliation, filtering, facet counts, recovery suggestions, aggregation, pagination, and URL state. Playwright tests exercise desktop and mobile browsers, real WebGL, country selection, searchable expertise, filter resets and recovery, delayed or failed data, history, themes, long labels, keyboard access, accessibility checks, failed photos, retry, and WebGL fallback. Screenshots and failure traces are written to ignored `test-results/`.
+The scraper package tests and typechecks independently: `npm --prefix mvp-scraper test` and `npm --prefix mvp-scraper run typecheck`.
 
-Production builds explicitly use Next.js's supported Webpack compiler because Turbopack's CSS worker could not bind its internal port in the development environment. Development uses the default Next.js compiler.
+## Resources
 
-## Deploy
-
-Create a Vercel Next.js project with **Root Directory: `mvp-site`**, install command `npm ci`, and build command `npm run build`. No sibling-folder access or environment variables are required. Enable Vercel Web Analytics in the project dashboard to collect production page views. Query strings and hashes are removed before Vercel page-view events; no custom search or profile events are emitted.
-
-Microsoft Clarity initializes in the browser on all pages in production builds using project ID `ymc3v0693l`. It is disabled during `npm run dev` and enabled during local production previews. View its session recordings and heatmaps in the corresponding Clarity project dashboard.
-
-For a local production preview:
-
-```sh
-npm run build
-npm start
-```
-
-To run browser checks against an already-running production preview, set `PLAYWRIGHT_BASE_URL=http://127.0.0.1:3000 npm run test:e2e`.
-
-This is an independent community directory. Snapshot completeness describes the public results returned by Microsoft at collection time, not every award holder or current award status. Award years, individual local profile pages, accounts, editing, and rankings are outside this release.
+- [Microsoft MVP directory](https://mvp.microsoft.com/en-US/search?target=Profile&program=MVP) — the data source
+- [mvp-scraper](mvp-scraper/README.md) — the independent scraper package
+- [Magic UI Globe](https://magicui.design/docs/components/globe) and [COBE](https://cobe.vercel.app/) — the globe renderer
+- [Map attribution](public/geo/ATTRIBUTION.md) — Natural Earth boundaries and World Atlas topology
