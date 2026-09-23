@@ -33,7 +33,7 @@ The country picker includes all 105 source locations plus mapped places without 
 
 ## Refresh the snapshot
 
-Run the independent [scraper](../mvp-scraper/README.md) first, then explicitly import:
+Run the independent [scraper](mvp-scraper/README.md) in `mvp-site/mvp-scraper/` first, then explicitly import from `mvp-site/`:
 
 ```sh
 cd mvp-site
@@ -43,6 +43,8 @@ npm run data:import -- --source /absolute/path/to/mvps.json
 npm test
 npm run build
 ```
+
+The default import source is `mvp-scraper/data/mvps.json`. The scraper keeps its own dependencies and TypeScript configuration; frontend typechecking and linting exclude that package. Run its checks with `npm --prefix mvp-scraper run typecheck` and `npm --prefix mvp-scraper test`.
 
 The importer requires a complete, enriched, unfiltered export. It rejects duplicate IDs, inconsistent coverage totals, unknown country labels, unexpected image hosts, and invalid official profile links. Source Microsoft GUIDs remain profile identifiers. New source country labels require an explicit entry in `src/data/countries.json` before import succeeds.
 

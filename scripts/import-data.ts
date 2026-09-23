@@ -5,7 +5,7 @@ import { parseArgs } from "node:util";
 import { prepareSnapshot } from "../src/lib/snapshot";
 import type { Country, SnapshotManifest } from "../src/lib/types";
 
-const { values } = parseArgs({ options: { source: { type: "string", default: "../mvp-scraper/data/mvps.json" } } });
+const { values } = parseArgs({ options: { source: { type: "string", default: "mvp-scraper/data/mvps.json" } } });
 const countries = JSON.parse(await readFile(resolve("src/data/countries.json"), "utf8")) as Country[];
 const data = prepareSnapshot(JSON.parse(await readFile(resolve(values.source!), "utf8")), countries);
 const content = JSON.stringify(data.profiles);
