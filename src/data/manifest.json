@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "version": "735043542c4f1cc7",
+  "version": "9c47f2e7da245331",
   "source": "https://mvp.microsoft.com/en-US/search?target=Profile&program=MVP",
-  "exportedAt": "2026-09-21T09:44:02.693Z",
-  "dataUrl": "/data/directory.735043542c4f1cc7.json",
-  "profileCount": 3798,
+  "exportedAt": "2026-09-23T17:48:05.240Z",
+  "dataUrl": "/data/directory.9c47f2e7da245331.json",
+  "profileCount": 3797,
   "countryCount": 105,
   "counts": {
     "NL": 226,
@@ -26,7 +26,7 @@
     "CA": 135,
     "CH": 81,
     "ID": 8,
-    "IE": 33,
+    "IE": 32,
     "PK": 17,
     "ES": 141,
     "NO": 60,
