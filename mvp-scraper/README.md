@@ -2,7 +2,7 @@
 
 TypeScript scraper for the public [Microsoft MVP directory](https://mvp.microsoft.com/en-US/search?target=Profile&program=MVP). Requires Node.js 20 or newer. This independent package lives inside the [frontend project](../README.md).
 
-Run all commands below from `mvp-site/mvp-scraper/`. Data paths are relative to this folder. Dependencies and TypeScript checks are separate from the frontend.
+Run all commands below from `mvp-scraper/`. Data paths are relative to this folder. Dependencies and TypeScript checks are separate from the frontend.
 
 ## Run
 

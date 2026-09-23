@@ -6,7 +6,7 @@
 
 An interactive globe and accessible directory of Microsoft Most Valuable Professionals around the world.
 
-[![Data refresh](https://img.shields.io/github/actions/workflow/status/EstopaceMA/mvp-site/refresh-mvp-data.yml?branch=main&label=data%20refresh)](../../actions/workflows/refresh-mvp-data.yml)
+[![Data refresh](https://img.shields.io/github/actions/workflow/status/EstopaceMA/mvp-global/refresh-mvp-data.yml?branch=main&label=data%20refresh)](../../actions/workflows/refresh-mvp-data.yml)
 [![Node](https://img.shields.io/badge/node-%E2%89%A520.9-339933?logo=node.js&logoColor=white)](package.json)
 [![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js&logoColor=white)](https://nextjs.org)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-3178C6?logo=typescript&logoColor=white)](tsconfig.json)
@@ -42,7 +42,7 @@ MVP Global turns the public [Microsoft MVP directory](https://mvp.microsoft.com/
 ### Run locally
 
 ```sh
-cd mvp-site
+cd mvp-global
 npm ci
 npm run dev
 ```
@@ -70,7 +70,7 @@ cd mvp-scraper
 npm run scrape -- --enrich
 
 # 2. Import it into the site
-cd ../mvp-site
+cd ..
 npm run data:import
 ```
 

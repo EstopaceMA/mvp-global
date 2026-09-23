@@ -16,7 +16,7 @@ concurrency:
 jobs:
   refresh:
     # Manual runs also use the reviewed workflow on main, never a different ref.
-    if: github.repository == 'EstopaceMA/mvp-site' && github.ref == 'refs/heads/main'
+    if: github.repository == 'EstopaceMA/mvp-global' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 180
     permissions:

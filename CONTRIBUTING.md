@@ -15,8 +15,8 @@ Thanks for your interest in improving MVP Global. This document covers how to se
 ### Setup
 
 ```sh
-git clone https://github.com/EstopaceMA/mvp-site.git
-cd mvp-site/mvp-site
+git clone https://github.com/EstopaceMA/mvp-global.git
+cd mvp-global
 npm ci
 npm run dev
 ```
@@ -27,7 +27,7 @@ Open [localhost:3000](http://localhost:3000). No environment variables, database
 
 This repository contains two independent npm packages:
 
-- **`mvp-site/`** — the Next.js App Router site (TypeScript, Tailwind CSS, shadcn/ui). This is almost certainly where you'll be working.
+- **repository root** — the Next.js App Router site (TypeScript, Tailwind CSS, shadcn/ui). This is almost certainly where you'll be working.
 - **`mvp-scraper/`** — a separate package that scrapes the public Microsoft MVP directory and produces the data snapshot consumed by the site. See [`mvp-scraper/README.md`](mvp-scraper/README.md).
 
 The site never talks to Microsoft at build or request time. If your change touches directory data, see [Working with data](#working-with-data) below.
@@ -41,7 +41,7 @@ The site never talks to Microsoft at build or request time. If your change touch
 
 ## Testing
 
-Run these from `mvp-site/` before submitting a change:
+Run these from the repository root before submitting a change:
 
 ```sh
 npm test              # unit tests: projection, filtering, snapshot validation, URL state...
@@ -79,7 +79,7 @@ To regenerate the snapshot from a fresh scrape:
 cd mvp-scraper
 npm run scrape -- --enrich
 
-cd ../mvp-site
+cd ..
 npm run data:import
 ```
 
@@ -92,7 +92,7 @@ Routine data refreshes are automated monthly via [`.github/workflows/refresh-mvp
 
 ## Reporting bugs and requesting features
 
-Please open a [GitHub issue](https://github.com/EstopaceMA/mvp-site/issues) with:
+Please open a [GitHub issue](https://github.com/EstopaceMA/mvp-global/issues) with:
 
 - A clear description of the problem or request
 - Steps to reproduce (for bugs), including browser/OS if relevant
