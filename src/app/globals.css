@@ -262,7 +262,7 @@ body, .site-header, .primary-nav, .profile-card, .profile-avatar, .search-field,
   .explorer-intro { top: 154px; left: 24px; max-width: 260px; pointer-events: none; }.explorer-intro h1 { font-size: 28px; line-height: 1.12; margin-top: 0; }.explorer-intro h1 br:nth-child(2) { display: none; }.explorer-intro h1 span:before { content: " "; }.intro-copy { display: none; }
   .atlas-stats { left: 24px; bottom: 96px; gap: 22px; }.stat-value { font-size: 25px; }.stat-label { font-size: .5625rem; gap: 5px; }.stat-label svg { width: 10px; }.atlas-stats .stat-divider { height: 34px; }.sheet-open .atlas-stats { bottom: 96px; }
   .globe-controls, .sheet-open .globe-controls { right: 15px; top: auto; bottom: 162px; gap: 7px; }.globe-controls button { width: 44px; height: 44px; }.globe-controls > button:last-child { display: none; }
-  .globe-legend { left: 24px; right: auto; bottom: 174px; width: 150px; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; backdrop-filter: blur(16px); }
+  .globe-legend { display: none; }
   .explorer-intro { top: 139px; max-width: calc(100% - 48px); }
   .explorer-intro h1 { font-size: 24px; }
   .show-results-button { left: 24px; right: 24px; bottom: 36px; transform: none; height: 48px; width: calc(100% - 48px); font-size: .875rem; }
