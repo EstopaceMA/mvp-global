@@ -2,8 +2,8 @@ name: Refresh MVP data
 
 on:
   schedule:
-    # 08:17 Asia/Manila on the second day of every month (UTC+8).
-    - cron: '17 0 2 * *'
+    # 00:00 Asia/Manila on the second day of every month (UTC+8).
+    - cron: '0 16 1 * *'
   workflow_dispatch:
 
 permissions:

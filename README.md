@@ -81,7 +81,7 @@ The importer validates the export — rejecting duplicate IDs, inconsistent cove
 
 ### Automated monthly refresh
 
-The [Refresh MVP data](.github/workflows/refresh-mvp-data.yml) workflow runs on the 2nd of each month (08:17 Asia/Manila), scrapes a complete export, and — only if profiles actually changed — opens a pull request from `automation/refresh-mvp-data` into `main` after tests, typecheck, lint, and the production build all pass. It can also be triggered manually from **Actions → Refresh MVP data → Run workflow**. Review and merge the PR like any other change; nothing is published automatically.
+The [Refresh MVP data](.github/workflows/refresh-mvp-data.yml) workflow runs on the 2nd of each month (12:00 AM Asia/Manila), scrapes a complete export, and — only if profiles actually changed — opens a pull request from `automation/refresh-mvp-data` into `main` after tests, typecheck, lint, and the production build all pass. It can also be triggered manually from **Actions → Refresh MVP data → Run workflow**. Review and merge the PR like any other change; nothing is published automatically.
 
 ## Testing
 
