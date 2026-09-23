@@ -35,12 +35,24 @@ export interface SnapshotManifest {
 
 export interface Filters {
   q: string;
-  country: string;
-  category: string;
-  technology: string;
-  region: string;
+  country: string[];
+  category: string[];
+  technology: string[];
+  region: string[];
   page: number;
 }
 
+export type FacetKey = "country" | "category" | "technology" | "region";
+export type RelaxableKey = FacetKey | "q";
+export interface Facet {
+  counts: Record<string, number>;
+  total: number;
+}
+export type Facets = Record<FacetKey, Facet>;
+export interface Relaxation {
+  key: RelaxableKey;
+  count: number;
+}
+
 export const PAGE_SIZE = 24;
-export const EMPTY_FILTERS: Filters = { q: "", country: "", category: "", technology: "", region: "", page: 1 };
+export const EMPTY_FILTERS: Filters = { q: "", country: [], category: [], technology: [], region: [], page: 1 };

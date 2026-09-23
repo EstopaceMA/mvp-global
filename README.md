@@ -23,7 +23,11 @@ Open [localhost:3000](http://localhost:3000). No environment variables, database
 - `/countries/[country]`: shareable country pages, including small territories such as `/countries/hong-kong-sar`.
 - `/about`: snapshot coverage, source, independence, and map attribution.
 
-Search matches names, countries, regions, award categories, and technologies, ignoring case and accents. Filters combine with AND. Selecting a country narrows the cards while preserving matching counts elsewhere on the globe. State uses `q`, `country`, `category`, `technology`, `region`, and `page` URL parameters and supports browser history. Theme preference persists locally.
+Search matches names, countries, regions, award categories, and technologies, ignoring case and accents. Selections within each filter combine with OR; different filters combine with AND. Selecting a country narrows the cards while preserving matching counts elsewhere on the globe. State uses `q`, `country`, `category`, `technology`, `region`, and `page` URL parameters and supports browser history. Multiple selections repeat the same parameter, such as `country=philippines&country=singapore`; existing single-selection links still work. Theme preference persists locally.
+
+Country and Award category are the primary filters; technology expertise and region are under Filters. All four use the same searchable multi-select design, with accent-insensitive label search, checkboxes, and contextual counts. Searching a dropdown only narrows its options. Toggle several options without closing it, then choose Done or press Escape. Closing a nested picker returns focus to its trigger and keeps Filters open. On the mobile globe, finish selecting filters and use View MVPs to open results.
+
+The Filters badge counts individual technology and region selections; Reset these filters clears only those fields. Option counts apply every criterion except that option’s entire filter. “All” clears the field and shows its unique-profile total, which can be smaller than the sum of overlapping option counts. Selections stay inside the dropdowns, keeping the globe clear of filter chips. Clear all appears below Reset these filters in the Filters panel whenever a criterion is active and resets every field. Use each dropdown’s Clear selections or toggle individual options to remove selections. Adding another country or removing the country from a country page navigates to `/mvps`, preserving other criteria. Empty results offer up to three positive whole-filter removals, prioritizing preservation of technology selections. Pending counts display as unavailable rather than showing stale values or zero.
 
 The country picker includes all 105 source locations plus mapped places without recorded profiles. Camera positions represent countries, not individual MVP locations. WebGL failure and context loss expose a directory link with the current filters. Reduced motion disables camera transitions; rendering pauses when the document is hidden. Missing or failed photos show initials.
 
@@ -63,7 +67,7 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-Unit tests cover globe projection, land hit detection, camera wrapping, snapshot validation, country mapping, reconciliation, filtering, aggregation, pagination, and URL state. Playwright tests exercise desktop and mobile browsers, real WebGL, country selection, search, filters, history, themes, keyboard access, accessibility checks, failed photos, retry, and WebGL fallback. Screenshots and failure traces are written to ignored `test-results/`.
+Unit tests cover globe projection, land hit detection, camera wrapping, snapshot validation, country mapping, reconciliation, filtering, facet counts, recovery suggestions, aggregation, pagination, and URL state. Playwright tests exercise desktop and mobile browsers, real WebGL, country selection, searchable expertise, filter resets and recovery, delayed or failed data, history, themes, long labels, keyboard access, accessibility checks, failed photos, retry, and WebGL fallback. Screenshots and failure traces are written to ignored `test-results/`.
 
 Production builds explicitly use Next.js's supported Webpack compiler because Turbopack's CSS worker could not bind its internal port in the development environment. Development uses the default Next.js compiler.
 

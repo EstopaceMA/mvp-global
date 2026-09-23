@@ -38,7 +38,7 @@ test("all covered countries have finite coordinates, including marker-only terri
 });
 
 test("country selection scopes cards without erasing counts for the rest of the globe", () => {
-  const result = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, country: "philippines" });
+  const result = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, country: ["philippines"] });
   assert.equal(result.total, manifest.counts.PH);
   assert.equal(result.globalTotal, profiles.length);
   assert.equal(result.counts.US, manifest.counts.US);
@@ -48,10 +48,10 @@ test("country selection scopes cards without erasing counts for the rest of the 
 test("all profiles are discoverable exactly once across paginated country directories", () => {
   const discovered = new Set<string>();
   for (const country of countries.filter(country => manifest.counts[country.id])) {
-    const initial = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, country: country.slug });
+    const initial = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, country: [country.slug] });
     assert.equal(initial.total, manifest.counts[country.id]);
     for (let page = 1; page <= initial.pages; page++) {
-      const result = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, country: country.slug, page });
+      const result = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, country: [country.slug], page });
       for (const profile of result.profiles) {
         assert.equal(profile.countryId, country.id);
         assert.ok(!discovered.has(profile.id));
@@ -68,11 +68,11 @@ test("search ignores accents and apostrophes; category, technology, and region f
   assert.equal(normalize("CÔTE D’IVOIRE"), normalize("Cote dIvoire"));
   const ivory = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, q: "Cote dIvoire" });
   assert.equal(ivory.total, manifest.counts.CI);
-  const result = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, category: "Microsoft Azure", region: "Europe" });
+  const result = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, category: ["Microsoft Azure"], region: ["Europe"] });
   assert.ok(result.total > 0);
   assert.ok(result.profiles.every(profile => profile.awardCategories.includes("Microsoft Azure") && countries.find(country => country.id === profile.countryId)?.region === "Europe"));
   const technology = result.profiles.find(profile => profile.technologies.length)!.technologies[0];
-  const specialized = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, category: "Microsoft Azure", region: "Europe", technology });
+  const specialized = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, category: ["Microsoft Azure"], region: ["Europe"], technology: [technology] });
   assert.ok(specialized.total > 0 && specialized.total <= result.total);
   assert.ok(specialized.profiles.every(profile => profile.technologies.includes(technology) && profile.awardCategories.includes("Microsoft Azure") && countries.find(country => country.id === profile.countryId)?.region === "Europe"));
   assert.equal(queryDirectory(profiles, countries, { ...EMPTY_FILTERS, q: "does-not-exist-abc123" }).total, 0);
@@ -85,11 +85,11 @@ test("pagination is alphabetical, disjoint, bounded, and resets when filters cha
   assert.ok(first.profiles.every(profile => !second.profiles.some(other => other.id === profile.id)));
   assert.ok(first.profiles[0].name.localeCompare(first.profiles[23].name, "en") <= 0);
   assert.equal(updateFilters({ ...EMPTY_FILTERS, page: 20 }, { q: "Azure" }).page, 1);
-  assert.equal(queryDirectory(profiles, countries, { ...EMPTY_FILTERS, country: "philippines", page: 9999 }).page, 1);
+  assert.equal(queryDirectory(profiles, countries, { ...EMPTY_FILTERS, country: ["philippines"], page: 9999 }).page, 1);
 });
 
 test("URL state round-trips and invalid filter values fall back safely", () => {
-  const filters = { ...EMPTY_FILTERS, q: "identity & access", country: "philippines", category: "Security", page: 2 };
+  const filters = { ...EMPTY_FILTERS, q: "identity & access", country: ["philippines"], category: ["Security"], page: 2 };
   assert.deepEqual(parseFilters(filterParams(filters), countries, manifest), filters);
   assert.ok(viewHref("/mvps", filters).includes("q=identity+%26+access"));
   assert.deepEqual(parseFilters(new URLSearchParams("country=unknown&category=made-up&technology=none&region=Atlantis&page=-2"), countries, manifest), EMPTY_FILTERS);
@@ -115,4 +115,14 @@ test("import accepts legacy Microsoft GUIDs and strips fields outside card data"
   raw.profiles[0].officialProfileUrl = `${new URL(manifest.source).origin}/en-US/mvp/profile/${raw.profiles[0].id}`;
   const input = { ...raw, profiles: raw.profiles.map(profile => ({ ...profile, email: "not-exported@example.invalid" })) };
   assert.ok(prepareSnapshot(input, countries).profiles.every(profile => !("email" in profile)));
+});
+
+
+test("multi-selection URLs preserve repeated values and accept legacy links", () => {
+  const filters = { ...EMPTY_FILTERS, country: ["philippines", "singapore"], category: ["Microsoft Azure", "Security"], technology: manifest.technologies.slice(0, 2), region: ["Asia", "Europe"] };
+  assert.deepEqual(parseFilters(filterParams(filters), countries, manifest), filters);
+  const parsed = parseFilters(new URLSearchParams("country=philippines&country=unknown&country=philippines&country=singapore&category=Security"), countries, manifest);
+  assert.deepEqual(parsed.country, ["philippines", "singapore"]);
+  assert.deepEqual(parsed.category, ["Security"]);
+  assert.deepEqual(parseFilters(new URLSearchParams("country=philippines"), countries, manifest).country, ["philippines"]);
 });

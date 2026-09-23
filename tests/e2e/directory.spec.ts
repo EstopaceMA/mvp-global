@@ -12,6 +12,8 @@ test("globe renders and country selection opens eight Philippine profiles", asyn
   await page.getByRole("combobox", { name: "Select country" }).click();
   await page.getByPlaceholder("Find a country or region…").fill("Philippines");
   await page.getByRole("option", { name: /^Philippines/ }).click();
+  await page.getByRole("button", { name: "Done", exact: true }).click();
+  if (testInfo.project.name === "mobile") await page.getByRole("button", { name: "View 8 MVPs", exact: true }).click();
   await expect(page).toHaveURL(/country=philippines/);
   await expect(page.getByRole("dialog", { name: "Philippines", exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Philippines", exact: true })).toBeVisible();
@@ -106,7 +108,8 @@ test("directory is keyboard accessible with no serious accessibility violations 
   await page.getByPlaceholder("Find a country or region…").fill("Singapore");
   await page.keyboard.press("ArrowDown");
   await page.keyboard.press("Enter");
-  await expect(page).toHaveURL(/country=singapore/);
+  await expect(page).toHaveURL(/country=philippines&country=singapore/);
+  await page.keyboard.press("Escape");
   await expect(page.getByPlaceholder("Find a country or region…")).not.toBeVisible();
   const report = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
   expect(report.violations.filter(violation => ["serious", "critical"].includes(violation.impact ?? ""))).toEqual([]);
@@ -133,6 +136,8 @@ test("typing on the globe retains focus and synchronizes counts and results", as
   await page.getByRole("combobox", { name: "Select country" }).click();
   await page.getByPlaceholder("Find a country or region…").fill("India");
   await page.getByRole("option", { name: /^India/ }).click();
+  await page.getByRole("button", { name: "Done", exact: true }).click();
+  if (testInfo.project.name === "mobile") await page.getByRole("button", { name: "View 0 MVPs", exact: true }).click();
   await expect(page.getByRole("heading", { name: "No matching MVPs" })).toBeVisible();
   await page.getByRole("button", { name: "Explore all MVPs" }).click();
   await expect(page.locator(".compact-results .profile-card")).toHaveCount(24);

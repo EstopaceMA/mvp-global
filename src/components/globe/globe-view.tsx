@@ -16,13 +16,14 @@ import { countryAtPoint, projectLocation, unprojectLocation, type CountryFeature
 
 export interface GlobeViewProps {
   counts: Record<string, number>;
-  selected: string;
+  countsPending?: boolean;
+  selected: string[];
   sheetOpen: boolean;
   onSelect(slug: string): void;
   onFailure(): void;
 }
 
-export default function GlobeView({ counts, selected, sheetOpen, onSelect, onFailure }: GlobeViewProps) {
+export default function GlobeView({ counts, countsPending = false, selected, sheetOpen, onSelect, onFailure }: GlobeViewProps) {
   const host = useRef<HTMLDivElement>(null);
   const globe = useRef<GlobeHandle>(null);
   const clickAudio = useRef<HTMLAudioElement>(null);
@@ -38,9 +39,9 @@ export default function GlobeView({ counts, selected, sheetOpen, onSelect, onFai
   const dark = resolvedTheme !== "light";
   const reducedMotion = useMedia("(prefers-reduced-motion: reduce)");
   const mobile = useMedia("(max-width: 767px)");
-  const country = countries.find(entry => entry.slug === selected);
+  const country = countries.find(entry => entry.slug === selected.at(-1));
   const hoveredCountry = hovered ? countryById.get(hovered) : undefined;
-  const markers = useMemo(() => countries.filter(entry => counts[entry.id] || entry.slug === selected), [counts, selected]);
+  const markers = useMemo(() => countries.filter(entry => counts[entry.id] || selected.includes(entry.slug)), [counts, selected]);
   const labels = useMemo(() => new Set([...markers].sort((a, b) => (counts[b.id] ?? 0) - (counts[a.id] ?? 0)).slice(0, mobile ? 4 : 7).map(entry => entry.id)), [markers, counts, mobile]);
   const maximum = Math.max(1, ...Object.values(counts));
   const config = useMemo<Partial<COBEOptions>>(() => ({
@@ -80,7 +81,7 @@ export default function GlobeView({ counts, selected, sheetOpen, onSelect, onFai
 
   const renderFrame = useCallback((frame: GlobeFrame) => {
     const occupied: { left: number; right: number; top: number; bottom: number }[] = [];
-    const priority = [...markers].sort((a, b) => Number(b.id === country?.id) - Number(a.id === country?.id) || (counts[b.id] ?? 0) - (counts[a.id] ?? 0));
+    const priority = [...markers].sort((a, b) => Number(selected.includes(b.slug)) - Number(selected.includes(a.slug)) || (counts[b.id] ?? 0) - (counts[a.id] ?? 0));
     for (const entry of priority) {
       const element = markerElements.current.get(entry.id);
       if (!element) continue;
@@ -102,12 +103,13 @@ export default function GlobeView({ counts, selected, sheetOpen, onSelect, onFai
       .translate([frame.centerX, frame.centerY])
       .scale(frame.radius);
     const path = geoPath(projection);
-    const selectedFeature = polygons.find(entry => entry.properties.countryId === country?.id);
+    const selectedIds = new Set(countries.filter(entry => selected.includes(entry.slug)).map(entry => entry.id));
+    const selectedFeatures = polygons.filter(entry => selectedIds.has(entry.properties.countryId));
     const hoveredFeature = polygons.find(entry => entry.properties.countryId === hovered);
-    selectionPath.current?.setAttribute("d", selectedFeature ? path(selectedFeature) ?? "" : "");
+    selectionPath.current?.setAttribute("d", selectedFeatures.map(feature => path(feature) ?? "").join(" "));
     hoverPath.current?.setAttribute("d", hoveredFeature ? path(hoveredFeature) ?? "" : "");
     if (host.current) host.current.dataset.scale = frame.scale.toFixed(3);
-  }, [markers, country, counts, hovered, polygons]);
+  }, [markers, selected, counts, hovered, polygons]);
 
   const hitTest = (x: number, y: number, frame: GlobeFrame) => {
     let nearest: string | undefined;
@@ -161,9 +163,10 @@ export default function GlobeView({ counts, selected, sheetOpen, onSelect, onFai
           const count = counts[entry.id] ?? 0;
           const intensity = Math.log1p(count) / Math.log1p(maximum);
           const radius = 3 + intensity * 4;
-          const chosen = entry.id === country?.id;
+          const chosen = selected.includes(entry.slug);
           const color = dark ? "hsl(213 95% " + (48 + intensity * 32) + "%)" : "hsl(213 85% " + (52 - intensity * 20) + "%)";
-          const label = chosen ? entry.name + " · " + formatCount(count) : formatCount(count);
+          const countLabel = countsPending ? "—" : formatCount(count);
+          const label = chosen ? entry.name + " · " + countLabel : countLabel;
           return <g key={entry.id} data-country-marker={entry.slug} ref={element => { if (element) markerElements.current.set(entry.id, element); else markerElements.current.delete(entry.id); }} style={{ display: "none" }}>
             <circle r={radius + 5} fill={color} fillOpacity={chosen ? 0.22 : 0.1}/>
             {chosen && <circle r={radius + 7} className="globe-marker-ring"/>}
@@ -175,7 +178,7 @@ export default function GlobeView({ counts, selected, sheetOpen, onSelect, onFai
           </g>;
         })}
       </svg>
-      <div ref={hoverTip} className="globe-country-tooltip" aria-hidden="true" hidden={!hoveredCountry}><strong>{hoveredCountry?.name}</strong><span>{hoverCount ? formatCount(hoverCount) + " matching MVPs" : hoveredCountry && manifest.counts[hoveredCountry.id] ? "No matching MVPs" : "No profiles in this snapshot"}</span></div>
+      <div ref={hoverTip} className="globe-country-tooltip" aria-hidden="true" hidden={!hoveredCountry}><strong>{hoveredCountry?.name}</strong><span>{countsPending ? "Matching counts unavailable" : hoverCount ? formatCount(hoverCount) + " matching MVPs" : hoveredCountry && manifest.counts[hoveredCountry.id] ? "No matching MVPs" : "No profiles in this snapshot"}</span></div>
     </Globe>}
     {!ready && <div className="globe-loading" role="status"><div className="loading-orbit"/><span>Bringing the world closer…</span></div>}
     <div className="globe-controls" aria-label="Globe controls">

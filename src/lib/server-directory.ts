@@ -7,7 +7,9 @@ import type { MvpProfile } from "./types";
 export type SearchParams = Record<string, string | string[] | undefined>;
 export function serverResults(search: SearchParams, country?: string) {
   const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(search)) if (typeof value === "string") params.set(key, value);
+  for (const [key, value] of Object.entries(search)) {
+    for (const item of typeof value === "string" ? [value] : value ?? []) params.append(key, item);
+  }
   if (country) params.set("country", country);
   const filters = parseFilters(params, countries, manifest);
   return { filters, ...queryDirectory(profilesData as MvpProfile[], countries, filters) };
