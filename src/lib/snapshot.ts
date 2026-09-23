@@ -1,6 +1,28 @@
 import { z } from "zod";
 import type { Country, MvpProfile } from "./types";
 
+// Compare published fields, treating expertise as sets and profile order as immaterial.
+export function summarizeProfileChanges(previous: MvpProfile[], next: MvpProfile[]) {
+  const signature = (profile: MvpProfile) => JSON.stringify([
+    profile.name, profile.countryId, profile.photoUrl, profile.officialProfileUrl,
+    [...new Set(profile.awardCategories)].sort(), [...new Set(profile.technologies)].sort(),
+  ]);
+  const before = new Map(previous.map(profile => [profile.id, signature(profile)]));
+  const after = new Map(next.map(profile => [profile.id, signature(profile)]));
+  let added = 0, removed = 0, updated = 0;
+  for (const [id, value] of after) {
+    if (!before.has(id)) added++;
+    else if (before.get(id) !== value) updated++;
+  }
+  for (const id of before.keys()) if (!after.has(id)) removed++;
+  return {
+    changed: added + removed + updated > 0, added, removed, updated,
+    previousTotal: previous.length, total: next.length,
+    previousCountryCount: new Set(previous.map(profile => profile.countryId)).size,
+    countryCount: new Set(next.map(profile => profile.countryId)).size,
+  };
+}
+
 const source = "https://mvp.microsoft.com/en-US/search?target=Profile&program=MVP";
 const stringList = z.array(z.string().trim().min(1));
 const sourceProfile = z.object({

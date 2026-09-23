@@ -1,6 +1,6 @@
 # MVP Global — the community atlas
 
-Next.js App Router, TypeScript, shadcn/ui, Tailwind CSS, and [Magic UI’s Globe](https://magicui.design/docs/components/globe), powered by COBE. The included September 21, 2026 snapshot contains **3,798 unique public profiles across 105 countries/regions**. All profiles are available without WebGL through the directory.
+Next.js App Router, TypeScript, shadcn/ui, Tailwind CSS, and [Magic UI’s Globe](https://magicui.design/docs/components/globe), powered by COBE. The bundled [snapshot manifest](src/data/manifest.json) records the current collection date, profile total, and country coverage. All profiles are available without WebGL through the directory.
 
 The project includes the [apple-design skill](../.agents/skills/apple-design/SKILL.md), pinned in `../skills-lock.json`. Its interface guidance is applied through readable type, 44px touch controls, immediate press feedback, translucent panels, and reduced-motion, reduced-transparency, and increased-contrast preferences. The MVP logo and the atlas’s navy/blue identity are retained.
 
@@ -29,7 +29,7 @@ Country and Award category are the primary filters; technology expertise and reg
 
 The Filters badge counts individual technology and region selections; Reset these filters clears only those fields. Option counts apply every criterion except that option’s entire filter. “All” clears the field and shows its unique-profile total, which can be smaller than the sum of overlapping option counts. Selections stay inside the dropdowns, keeping the globe clear of filter chips. Clear all appears below Reset these filters in the Filters panel whenever a criterion is active and resets every field. Use each dropdown’s Clear selections or toggle individual options to remove selections. Adding another country or removing the country from a country page navigates to `/mvps`, preserving other criteria. Empty results offer up to three positive whole-filter removals, prioritizing preservation of technology selections. Pending counts display as unavailable rather than showing stale values or zero.
 
-The country picker includes all 105 source locations plus mapped places without recorded profiles. Camera positions represent countries, not individual MVP locations. WebGL failure and context loss expose a directory link with the current filters. Reduced motion disables camera transitions; rendering pauses when the document is hidden. Missing or failed photos show initials.
+The country picker includes source locations plus mapped places without recorded profiles. Camera positions represent countries, not individual MVP locations. WebGL failure and context loss expose a directory link with the current filters. Reduced motion disables camera transitions; rendering pauses when the document is hidden. Missing or failed photos show initials.
 
 ## Refresh the snapshot
 
@@ -52,11 +52,35 @@ Keep these generated files in source control together:
 
 - `src/data/profiles.json`: server-rendered initial card data.
 - `src/data/manifest.json`: counts, filter options, coverage, timestamp, and content version.
-- `public/data/directory.<hash>.json`: compact browser dataset, fetched once and reused across views (approximately 195 KiB gzip for this snapshot).
+- `public/data/directory.<hash>.json`: compact browser dataset, fetched once and reused across views.
 
 Deployments read only these prepared files. The build never runs the scraper or fetches directory data from Microsoft. Photos load lazily through Next.js image optimization, restricted to `images.mvp.microsoft.com`. Older content-hashed browser snapshots may be retained across updates for clients with previously cached pages.
 
-Country metadata, region assignments, and camera coordinates are explicit in `src/data/countries.json`. Simplified Natural Earth boundaries are bundled in `public/geo/countries.topo.json`; [map attribution](public/geo/ATTRIBUTION.md) records their origin. Small territories without polygons remain available as markers and picker entries. The Magic UI globe uses COBE for the dotted globe, with a projected SVG overlay for all 105 countries (avoiding the renderer’s 64-marker limit). Natural Earth geometry powers land selection and hovered/selected country outlines. Drag to rotate, scroll or pinch to zoom, and use the zoom/reset controls. Camera movement uses interruptible Motion springs.
+Country metadata, region assignments, and camera coordinates are explicit in `src/data/countries.json`. Simplified Natural Earth boundaries are bundled in `public/geo/countries.topo.json`; [map attribution](public/geo/ATTRIBUTION.md) records their origin. Small territories without polygons remain available as markers and picker entries. The Magic UI globe uses COBE for the dotted globe, with a projected SVG overlay for all covered countries (avoiding the renderer’s 64-marker limit). Natural Earth geometry powers land selection and hovered/selected country outlines. Drag to rotate, scroll or pinch to zoom, and use the zoom/reset controls. Camera movement uses interruptible Motion springs.
+
+## Monthly refresh pull requests
+
+[Refresh MVP data](.github/workflows/refresh-mvp-data.yml) runs on the **2nd day of each month at 08:17 Asia/Manila** (00:17 UTC; cron `17 0 2 * *`). GitHub may delay scheduled jobs. The workflow must be merged into `main` before the schedule is active. To run it manually, open **Actions → Refresh MVP data → Run workflow**, selecting `main`.
+
+Each run installs both packages from their lockfiles on Node.js 24, checks the scraper, and collects a fresh complete export with enrichment at one request start per second. There is no checkpoint reuse between runs. The scraper step allows 150 minutes, within a 180-minute job timeout; overlapping runs are serialized.
+
+The importer validates coverage before comparing published profiles by ID. Observation timestamps, profile order, and category/technology ordering do not count as changes. If profiles are unchanged, the workflow leaves all snapshot files and their collection date untouched and skips PR creation/update. The Actions run summary records the successful check date instead.
+
+For changed profiles, site tests, typecheck, lint, and the production build must pass before the workflow creates or updates **`automation/refresh-mvp-data` → `main`**. The PR includes added, updated, and removed counts, before/after totals, the collection date, and a run link. Only `src/data/profiles.json`, `src/data/manifest.json`, and `public/data/directory.*.json` are committed. Published older browser datasets are retained; raw exports, checkpoints, dependencies, and reports are excluded. Review and merge the PR manually. A failed or unchanged run leaves any existing data PR untouched.
+
+The workflow uses GitHub's automatically supplied `GITHUB_TOKEN`, with `contents: write` and `pull-requests: write`. The repository setting **Actions → General → Allow GitHub Actions to create and approve pull requests** must be enabled. No personal token or additional secret is required. All refresh checks run before PR creation, without depending on a second PR-triggered workflow.
+
+To use the same import behavior locally after a scrape:
+
+```sh
+npm run data:import -- --skip-unchanged
+# Optionally write a machine-readable change report outside the repository:
+npm run data:import -- --skip-unchanged --report /tmp/mvp-refresh-report.json
+```
+
+Without `--skip-unchanged`, a manual import retains its existing behavior and updates the collection date even when profiles match. No snapshot format changes are introduced.
+
+On failure, inspect the failed step and its logs in Actions, resolve the source/schema or country-mapping issue, and rerun manually. Partial exports are never published; the live site and existing PR remain unchanged. The monthly checks use synthetic data for fixed filter scenarios and verify the new snapshot's totals and assets independently of any historical MVP count.
 
 ## Verification
 

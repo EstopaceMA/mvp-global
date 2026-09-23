@@ -1,0 +1,119 @@
+name: Refresh MVP data
+
+on:
+  schedule:
+    # 08:17 Asia/Manila on the second day of every month (UTC+8).
+    - cron: '17 0 2 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: refresh-mvp-data
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    # Manual runs also use the reviewed workflow on main, never a different ref.
+    if: github.repository == 'EstopaceMA/mvp-site' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Check out main
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            mvp-scraper/package-lock.json
+
+      - name: Install locked dependencies
+        run: |
+          npm ci
+          npm ci --prefix mvp-scraper
+
+      - name: Check scraper
+        run: |
+          npm --prefix mvp-scraper run typecheck
+          npm --prefix mvp-scraper test
+
+      - name: Collect a fresh complete snapshot
+        timeout-minutes: 150
+        run: npm --prefix mvp-scraper run scrape -- --page-size 0 --enrich --delay-ms 1000 --concurrency 1
+
+      - name: Validate and import changed profiles
+        run: npm run data:import -- --skip-unchanged --report "$RUNNER_TEMP/mvp-refresh-report.json"
+
+      - name: Summarize changes
+        id: changes
+        run: |
+          node --input-type=module <<'JS'
+          import { readFileSync, appendFileSync } from 'node:fs';
+          const report = JSON.parse(readFileSync(`${process.env.RUNNER_TEMP}/mvp-refresh-report.json`, 'utf8'));
+          const outputs = { ...report, date: report.collectedAt.slice(0, 10) };
+          appendFileSync(process.env.GITHUB_OUTPUT, Object.entries(outputs).map(([key, value]) => `${key}=${value}\n`).join(''));
+          appendFileSync(process.env.GITHUB_STEP_SUMMARY, [
+            '## MVP refresh',
+            `Collected: ${report.collectedAt}`,
+            `Profiles: ${report.previousTotal} → ${report.total}`,
+            `Countries/regions: ${report.previousCountryCount} → ${report.countryCount}`,
+            `Added: ${report.added}; updated: ${report.updated}; removed: ${report.removed}.`,
+            report.changed ? 'Profile changes detected; validation must pass before updating the PR.' : 'No profile changes. Snapshot date preserved; no PR created or updated.',
+            '',
+          ].join('\n\n'));
+          JS
+
+      - name: Validate the updated site
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          npm test
+          npm run typecheck
+          npm run lint
+          npm run build
+
+      - name: Create or update the data PR
+        if: steps.changes.outputs.changed == 'true'
+        id: pull-request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: main
+          branch: automation/refresh-mvp-data
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          commit-message: 'chore: refresh MVP data'
+          title: 'chore: refresh MVP data — ${{ steps.changes.outputs.date }}'
+          body: |
+            Refresh the published MVP directory from a complete, enriched public snapshot.
+
+            - Collected: ${{ steps.changes.outputs.collectedAt }}
+            - Profiles: ${{ steps.changes.outputs.previousTotal }} → ${{ steps.changes.outputs.total }}
+            - Countries/regions: ${{ steps.changes.outputs.previousCountryCount }} → ${{ steps.changes.outputs.countryCount }}
+            - Added: ${{ steps.changes.outputs.added }}
+            - Updated: ${{ steps.changes.outputs.updated }}
+            - Removed: ${{ steps.changes.outputs.removed }}
+
+            Validation: scraper tests/typecheck; snapshot completeness and country mapping; site tests, typecheck, lint, and production build.
+
+            [Workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            Review and merge manually. Raw exports and checkpoints are excluded; older browser datasets are retained.
+          add-paths: |
+            src/data/profiles.json
+            src/data/manifest.json
+            public/data/directory.*.json
+
+      - name: Link the pull request
+        if: steps.pull-request.outputs.pull-request-url != ''
+        env:
+          PR_URL: ${{ steps.pull-request.outputs.pull-request-url }}
+        run: printf '\n[Review the data PR](%s)\n' "$PR_URL" >> "$GITHUB_STEP_SUMMARY"

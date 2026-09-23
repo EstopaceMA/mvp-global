@@ -1,6 +1,5 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
 import { countries } from "../src/lib/catalog";
 import { EMPTY_FILTERS, queryDirectory } from "../src/lib/directory";
 import type { FacetKey, MvpProfile } from "../src/lib/types";
@@ -80,7 +79,12 @@ test("recovery includes only positive single removals and never changes a nonemp
 });
 
 test("Philippine Azure and Power BI search suggests category before technology", () => {
-  const snapshot = JSON.parse(readFileSync(new URL("../src/data/profiles.json", import.meta.url), "utf8")) as MvpProfile[];
+  const snapshot = [
+    profile("azure", "PH", ["Microsoft Azure"], ["Azure Compute Infrastructure"]),
+    profile("power-bi-1", "PH", ["Data Platform"], ["Power BI"]),
+    profile("power-bi-2", "PH", ["Data Platform"], ["Power BI"]),
+    profile("other-country", "US", ["Data Platform"], ["Power BI"]),
+  ];
   const result = queryDirectory(snapshot, countries, { ...EMPTY_FILTERS, country: ["philippines"], category: ["Microsoft Azure"], technology: ["Power BI"] });
   assert.equal(result.total, 0);
   assert.deepEqual(result.relaxations, [{ key: "category", count: 2 }, { key: "technology", count: 1 }]);

@@ -6,6 +6,7 @@ import { EMPTY_FILTERS, filterParams, normalize, parseFilters, queryDirectory, u
 import { prepareSnapshot } from "../src/lib/snapshot";
 import type { MvpProfile } from "../src/lib/types";
 
+const filterCatalog = { categories: ["Microsoft Azure", "Security"], technologies: ["Power BI", ".NET"], regions: ["Asia", "Europe"] };
 const profiles = JSON.parse(readFileSync(new URL("../src/data/profiles.json", import.meta.url), "utf8")) as MvpProfile[];
 function fixture() {
   return { schemaVersion: 1, source: manifest.source, exportedAt: manifest.exportedAt,
@@ -29,7 +30,7 @@ test("all covered countries have finite coordinates, including marker-only terri
   const covered = countries.filter(country => manifest.counts[country.id]);
   assert.ok(covered.every(country => Number.isFinite(country.lat) && Number.isFinite(country.lng)));
   for (const name of ["Singapore", "Hong Kong SAR", "Malta", "Bahrain", "Mauritius"]) {
-    const country = covered.find(country => country.name === name)!;
+    const country = countries.find(country => country.name === name)!;
     assert.ok(country);
     assert.equal(country.geometryId, null);
   }
@@ -39,7 +40,7 @@ test("all covered countries have finite coordinates, including marker-only terri
 
 test("country selection scopes cards without erasing counts for the rest of the globe", () => {
   const result = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, country: ["philippines"] });
-  assert.equal(result.total, manifest.counts.PH);
+  assert.equal(result.total, manifest.counts.PH ?? 0);
   assert.equal(result.globalTotal, profiles.length);
   assert.equal(result.counts.US, manifest.counts.US);
   assert.ok(result.profiles.every(profile => profile.countryId === "PH"));
@@ -66,33 +67,35 @@ test("all profiles are discoverable exactly once across paginated country direct
 
 test("search ignores accents and apostrophes; category, technology, and region filters use AND", () => {
   assert.equal(normalize("CÔTE D’IVOIRE"), normalize("Cote dIvoire"));
-  const ivory = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, q: "Cote dIvoire" });
-  assert.equal(ivory.total, manifest.counts.CI);
-  const result = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, category: ["Microsoft Azure"], region: ["Europe"] });
-  assert.ok(result.total > 0);
-  assert.ok(result.profiles.every(profile => profile.awardCategories.includes("Microsoft Azure") && countries.find(country => country.id === profile.countryId)?.region === "Europe"));
-  const technology = result.profiles.find(profile => profile.technologies.length)!.technologies[0];
-  const specialized = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, category: ["Microsoft Azure"], region: ["Europe"], technology: [technology] });
-  assert.ok(specialized.total > 0 && specialized.total <= result.total);
-  assert.ok(specialized.profiles.every(profile => profile.technologies.includes(technology) && profile.awardCategories.includes("Microsoft Azure") && countries.find(country => country.id === profile.countryId)?.region === "Europe"));
-  assert.equal(queryDirectory(profiles, countries, { ...EMPTY_FILTERS, q: "does-not-exist-abc123" }).total, 0);
+  const experts: MvpProfile[] = [
+    { ...profiles[0], id: "ivory", name: "Ivory expert", countryId: "CI", awardCategories: ["Data Platform"], technologies: ["Power BI"] },
+    { ...profiles[0], id: "azure", name: "Azure expert", countryId: "FR", awardCategories: ["Microsoft Azure"], technologies: ["Azure Compute Infrastructure"] },
+    { ...profiles[0], id: "data", name: "Data expert", countryId: "FR", awardCategories: ["Data Platform"], technologies: ["Power BI"] },
+  ];
+  assert.equal(queryDirectory(experts, countries, { ...EMPTY_FILTERS, q: "Cote dIvoire" }).total, 1);
+  const result = queryDirectory(experts, countries, { ...EMPTY_FILTERS, category: ["Microsoft Azure"], region: ["Europe"], technology: ["Azure Compute Infrastructure"] });
+  assert.deepEqual(result.profiles.map(profile => profile.id), ["azure"]);
+  assert.equal(queryDirectory(experts, countries, { ...EMPTY_FILTERS, category: ["Microsoft Azure"], technology: ["Power BI"] }).total, 0);
+  assert.equal(queryDirectory(experts, countries, { ...EMPTY_FILTERS, q: "does-not-exist-abc123" }).total, 0);
 });
 
 test("pagination is alphabetical, disjoint, bounded, and resets when filters change", () => {
-  const first = queryDirectory(profiles, countries, EMPTY_FILTERS);
-  const second = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, page: 2 });
+  const entries = Array.from({ length: 50 }, (_, index) => ({ ...profiles[0], id: String(index), name: `Expert ${String(index).padStart(2, "0")}` }));
+  const first = queryDirectory(entries, countries, EMPTY_FILTERS);
+  const second = queryDirectory(entries, countries, { ...EMPTY_FILTERS, page: 2 });
   assert.equal(first.profiles.length, 24);
   assert.ok(first.profiles.every(profile => !second.profiles.some(other => other.id === profile.id)));
-  assert.ok(first.profiles[0].name.localeCompare(first.profiles[23].name, "en") <= 0);
+  assert.ok(first.profiles[0].name.localeCompare(first.profiles.at(-1)!.name, "en") <= 0);
   assert.equal(updateFilters({ ...EMPTY_FILTERS, page: 20 }, { q: "Azure" }).page, 1);
-  assert.equal(queryDirectory(profiles, countries, { ...EMPTY_FILTERS, country: ["philippines"], page: 9999 }).page, 1);
+  const last = queryDirectory(profiles, countries, { ...EMPTY_FILTERS, country: ["philippines"], page: 9999 });
+  assert.equal(last.page, last.pages);
 });
 
 test("URL state round-trips and invalid filter values fall back safely", () => {
   const filters = { ...EMPTY_FILTERS, q: "identity & access", country: ["philippines"], category: ["Security"], page: 2 };
-  assert.deepEqual(parseFilters(filterParams(filters), countries, manifest), filters);
+  assert.deepEqual(parseFilters(filterParams(filters), countries, filterCatalog), filters);
   assert.ok(viewHref("/mvps", filters).includes("q=identity+%26+access"));
-  assert.deepEqual(parseFilters(new URLSearchParams("country=unknown&category=made-up&technology=none&region=Atlantis&page=-2"), countries, manifest), EMPTY_FILTERS);
+  assert.deepEqual(parseFilters(new URLSearchParams("country=unknown&category=made-up&technology=none&region=Atlantis&page=-2"), countries, filterCatalog), EMPTY_FILTERS);
 });
 
 test("snapshot import rejects incomplete, filtered, duplicate, unmapped, and inconsistent data", () => {
@@ -119,10 +122,10 @@ test("import accepts legacy Microsoft GUIDs and strips fields outside card data"
 
 
 test("multi-selection URLs preserve repeated values and accept legacy links", () => {
-  const filters = { ...EMPTY_FILTERS, country: ["philippines", "singapore"], category: ["Microsoft Azure", "Security"], technology: manifest.technologies.slice(0, 2), region: ["Asia", "Europe"] };
-  assert.deepEqual(parseFilters(filterParams(filters), countries, manifest), filters);
-  const parsed = parseFilters(new URLSearchParams("country=philippines&country=unknown&country=philippines&country=singapore&category=Security"), countries, manifest);
+  const filters = { ...EMPTY_FILTERS, country: ["philippines", "singapore"], category: ["Microsoft Azure", "Security"], technology: filterCatalog.technologies, region: ["Asia", "Europe"] };
+  assert.deepEqual(parseFilters(filterParams(filters), countries, filterCatalog), filters);
+  const parsed = parseFilters(new URLSearchParams("country=philippines&country=unknown&country=philippines&country=singapore&category=Security"), countries, filterCatalog);
   assert.deepEqual(parsed.country, ["philippines", "singapore"]);
   assert.deepEqual(parsed.category, ["Security"]);
-  assert.deepEqual(parseFilters(new URLSearchParams("country=philippines"), countries, manifest).country, ["philippines"]);
+  assert.deepEqual(parseFilters(new URLSearchParams("country=philippines"), countries, filterCatalog).country, ["philippines"]);
 });
