@@ -20,10 +20,11 @@ export interface GlobeViewProps {
   selected: string[];
   sheetOpen: boolean;
   onSelect(slug: string): void;
+  onInteract?(): void;
   onFailure(): void;
 }
 
-export default function GlobeView({ counts, countsPending = false, selected, sheetOpen, onSelect, onFailure }: GlobeViewProps) {
+export default function GlobeView({ counts, countsPending = false, selected, sheetOpen, onSelect, onInteract, onFailure }: GlobeViewProps) {
   const host = useRef<HTMLDivElement>(null);
   const globe = useRef<GlobeHandle>(null);
   const clickAudio = useRef<HTMLAudioElement>(null);
@@ -134,7 +135,7 @@ export default function GlobeView({ counts, countsPending = false, selected, she
   const centerY = mobile ? (mobileGlobeTop + mobileGlobeBottom) / 2 : size.height / 2 + 5;
   const hoverCount = hovered ? counts[hovered] ?? 0 : 0;
 
-  return <div ref={host} className="globe-host" data-testid="globe-container" data-renderer="magic-ui-cobe" data-ready={ready}>
+  return <div ref={host} className="globe-host" data-testid="globe-container" data-renderer="magic-ui-cobe" data-ready={ready} onPointerDownCapture={() => onInteract?.()}>
     <audio ref={clickAudio} src="/click-effect.mp3" preload="auto" />
     {side > 0 && polygons.length > 0 && <Globe ref={globe} className="globe-renderer" layout={{ centerX, centerY, radius: side * 0.4 }}
       config={config} reducedMotion={reducedMotion} onReady={() => setReady(true)} onFailure={onFailure} onFrame={renderFrame}
@@ -142,6 +143,7 @@ export default function GlobeView({ counts, countsPending = false, selected, she
         const id = hitTest(x, y, frame);
         const entry = id ? countryById.get(id) : undefined;
         if (!entry) return;
+        onInteract?.();
         const audio = clickAudio.current;
         if (audio) {
           audio.currentTime = 0;
@@ -182,9 +184,9 @@ export default function GlobeView({ counts, countsPending = false, selected, she
     </Globe>}
     {!ready && <div className="globe-loading" role="status"><div className="loading-orbit"/><span>Bringing the world closer…</span></div>}
     <div className="globe-controls" aria-label="Globe controls">
-      <Tooltip><TooltipTrigger asChild><Button variant="outline" size="icon" aria-label="Reset globe view" onClick={() => globe.current?.reset()}><Navigation2 size={16}/></Button></TooltipTrigger><TooltipContent side="left">Reset view · North up</TooltipContent></Tooltip>
-      <div className="zoom-buttons"><Button variant="ghost" size="icon" aria-label="Zoom in" onClick={() => globe.current?.zoom(1.2)}><Plus size={18}/></Button><span/><Button variant="ghost" size="icon" aria-label="Zoom out" onClick={() => globe.current?.zoom(1 / 1.2)}><Minus size={18}/></Button></div>
-      <Button variant="ghost" size="icon" aria-label="Recenter globe" onClick={() => globe.current?.reset()}><RotateCcw size={15}/></Button>
+      <Tooltip><TooltipTrigger asChild><Button variant="outline" size="icon" aria-label="Reset globe view" onClick={() => { onInteract?.(); globe.current?.reset(); }}><Navigation2 size={16}/></Button></TooltipTrigger><TooltipContent side="left">Reset view · North up</TooltipContent></Tooltip>
+      <div className="zoom-buttons"><Button variant="ghost" size="icon" aria-label="Zoom in" onClick={() => { onInteract?.(); globe.current?.zoom(1.2); }}><Plus size={18}/></Button><span/><Button variant="ghost" size="icon" aria-label="Zoom out" onClick={() => { onInteract?.(); globe.current?.zoom(1 / 1.2); }}><Minus size={18}/></Button></div>
+      <Button variant="ghost" size="icon" aria-label="Recenter globe" onClick={() => { onInteract?.(); globe.current?.reset(); }}><RotateCcw size={15}/></Button>
     </div>
   </div>;
 }

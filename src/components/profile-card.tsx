@@ -16,7 +16,7 @@ export function ProfileCard({ profile, compact = false }: { profile: MvpProfile;
       <div className="profile-top"><div className="profile-avatar" aria-hidden="true">
         {profile.photoUrl && !failedPhoto ? <Image src={profile.photoUrl} alt="" fill sizes="56px" loading="lazy" onError={() => setFailedPhoto(true)} /> : <span>{initials}</span>}
       </div><div className="min-w-0"><h3>{profile.name}</h3><p className="profile-country"><MapPin size={12}/>{country?.name ?? "Country not listed"}</p></div><span className="mvp-label">MVP</span></div>
-      <div className="profile-categories">{profile.awardCategories.map(category => <Badge variant="secondary" key={category}>{category}</Badge>)}</div>
+      <div className="profile-categories"><p className="eyebrow">AWARD CATEGORY</p>{profile.awardCategories.map(category => <Badge variant="secondary" key={category}>{category}</Badge>)}</div>
       <div className="profile-technologies"><p className="eyebrow">TECHNOLOGY EXPERTISE</p><div>{profile.technologies.map(technology => <span key={technology}>{technology}</span>)}</div></div>
       <a className="profile-link" href={profile.officialProfileUrl} target="_blank" rel="noopener noreferrer" aria-label={`View ${profile.name}’s official Microsoft MVP profile (opens in a new tab)`}>View official profile <ArrowUpRight size={15}/></a>
     </CardContent>

@@ -22,6 +22,7 @@ export function Explorer() {
   const [failed, setFailed] = useState(false);
   const [opened, setOpened] = useState(false);
   const [mobileEditing, setMobileEditing] = useState(false);
+  const [interaction, setInteraction] = useState<"none" | "search" | "globe">("none");
   const [dismissed, setDismissed] = useState<string | null>(null);
   const resultsButton = useRef<HTMLButtonElement>(null);
   const mobile = useMedia("(max-width: 767px)");
@@ -39,9 +40,15 @@ export function Explorer() {
   const total = result?.globalTotal ?? (countsPending ? undefined : manifest.profileCount);
   const resultCount = result?.total ?? total;
   const onFailure = useCallback(() => setFailed(true), []);
-  const onSelect = useCallback((slug: string) => { setFilters({ country: [slug] }); setMobileEditing(false); setOpened(true); }, [setFilters]);
+  const onSelect = useCallback((slug: string) => {
+    setFilters({ country: [slug] });
+    setInteraction("globe");
+    setMobileEditing(false);
+    setOpened(true);
+  }, [setFilters]);
   const onOpenChange = (open: boolean) => { setOpened(open); if (!open) setDismissed(key); };
   const onFilterInteraction = (values: Partial<Filters>) => {
+    setInteraction("search");
     if (!mobile) { setMobileEditing(false); setOpened(true); }
     else {
       // Let mobile visitors finish typing before opening the modal results sheet.
@@ -54,10 +61,15 @@ export function Explorer() {
     }
   };
   const activeCountries = Object.values(counts).filter(Boolean).length;
+  const hint = interaction === "none"
+    ? "Tip: Drag to explore · Scroll to zoom · Search to focus"
+    : interaction === "search"
+      ? "Tip: Tap a marker to jump straight into local MVP results"
+      : "Tip: Use filters above to narrow by category, technology, or region";
   return <main id="main-content" className={`explorer ${showResults ? "sheet-open" : ""} ${hasFilters(filters) ? "has-filters" : ""} ${failed ? "globe-unavailable" : ""}`}>
     <div className="atlas-grid" aria-hidden="true"/>
-    {!failed && <GlobeClient counts={counts} countsPending={countsPending} selected={filters.country} sheetOpen={showResults} onSelect={onSelect} onFailure={onFailure}/>}
-    <div className="explorer-search"><FilterBar facets={result?.facets} onInteract={onFilterInteraction} onSubmit={() => setOpened(true)}/><DataError/></div>
+    {!failed && <GlobeClient counts={counts} countsPending={countsPending} selected={filters.country} sheetOpen={showResults} onSelect={onSelect} onInteract={() => setInteraction("globe")} onFailure={onFailure}/>}
+    <div className="explorer-search"><FilterBar facets={result?.facets} onInteract={onFilterInteraction} onSubmit={() => { setInteraction("search"); setOpened(true); }}/><DataError/></div>
     <section className="explorer-intro" aria-label="Welcome to the community atlas">
       <h1>One community.<br/>A world of<br/><span>possibilities.</span></h1>
       <p className="intro-copy">Meet the people who make<br className="desktop-break"/> technology move forward.</p>
@@ -65,6 +77,7 @@ export function Explorer() {
     {failed && <section className="globe-fallback" role="status"><span className="fallback-icon"><Globe2 size={36}/></span><h2>A world of expertise.<br/>Another way to explore.</h2><p>The 3D globe isn’t available on this device. Every MVP is still a search away.</p><Button asChild><Link href={viewHref("/mvps", filters)}>Open the directory<ArrowRight size={16}/></Link></Button><p className="text-xs">Or choose a country above to browse its profiles here.</p></section>}
     <div className="atlas-stats"><div><span className="stat-value">{total === undefined ? "—" : formatCount(total)}</span><span className="stat-label"><Users size={12}/>MICROSOFT MVPs</span></div><div className="stat-divider"/><div><span className="stat-value">{countsPending ? "—" : activeCountries}</span><span className="stat-label"><Globe2 size={12}/>COUNTRIES & REGIONS</span></div></div>
     {!countsPending && <div className="globe-legend"><span>MVPs BY COUNTRY</span><div className="legend-ramp"/><div className="legend-values"><span>0</span><span>{formatCount(Math.max(1, ...Object.values(counts)))}</span></div><small>Marker size & color · logarithmic scale</small></div>}
+    <p className="atlas-tip">{hint}</p>
     <div className="atlas-bottom"><p><MousePointer2 size={13}/>Drag to explore <span>·</span> Scroll to zoom</p><span className="snapshot-label"><span className="status-dot"/>Snapshot · {snapshotDate}</span><Link href="/about">About this atlas<ArrowUpRight size={12}/></Link></div>
     <Button className="show-results-button" ref={resultsButton} onClick={() => setOpened(true)}><Users size={15}/>{resultCount === undefined ? "View MVPs" : `View ${formatCount(resultCount)} MVPs`}<ArrowRight size={15}/></Button>
     <Sheet open={showResults} onOpenChange={onOpenChange} modal={mobile}>

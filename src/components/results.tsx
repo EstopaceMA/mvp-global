@@ -23,10 +23,22 @@ export function Results({ result, compact = false, onInteract }: { result: Query
   const { filters, setFilters } = useFilters();
   const country = filters.country.length === 1 ? countries.find(country => country.slug === filters.country[0]) : undefined;
   const change = (values: Partial<Filters>) => { setFilters(values); onInteract?.(); };
+  const selectedCountries = filters.country.map(slug => countries.find(country => country.slug === slug)?.name ?? slug);
+  const chips = [
+    ...(filters.q ? [{ key: "q", label: `Search: ${filters.q}`, onRemove: () => change({ q: "" }) }] : []),
+    ...selectedCountries.map((name, index) => ({ key: `country-${filters.country[index]}`, label: `Country: ${name}`, onRemove: () => change({ country: filters.country.filter((_, current) => current !== index) }) })),
+    ...filters.category.map((value, index) => ({ key: `category-${value}`, label: `Category: ${value}`, onRemove: () => change({ category: filters.category.filter((_, current) => current !== index) }) })),
+    ...filters.technology.map((value, index) => ({ key: `technology-${value}`, label: `Technology: ${value}`, onRemove: () => change({ technology: filters.technology.filter((_, current) => current !== index) }) })),
+    ...filters.region.map((value, index) => ({ key: `region-${value}`, label: `Region: ${value}`, onRemove: () => change({ region: filters.region.filter((_, current) => current !== index) }) })),
+  ];
   if (!result) return error ? <DataError/> : <ResultsSkeleton/>;
   const noSourceProfiles = country && !manifest.counts[country.id];
   return <div className={compact ? "results-container compact-results" : "results-container"}>
     <div className="results-meta"><p role="status" aria-live="polite"><strong>{formatCount(result.total)}</strong> {result.total === 1 ? "MVP" : "MVPs"}{country ? ` in ${country.name}` : filters.country.length ? ` in ${filters.country.length} countries` : " to discover"}</p><span>NAME A–Z</span></div>
+    {chips.length > 0 && <div className="applied-filters" aria-label="Applied filters">
+      {chips.map(chip => <Button key={chip.key} variant="outline" size="xs" onClick={chip.onRemove}>{chip.label}</Button>)}
+      <Button variant="ghost" size="xs" onClick={() => change(EMPTY_FILTERS)}>Clear all</Button>
+    </div>}
     {error && <DataError/>}
     {result.total === 0 ? <div className="empty-results"><span className="empty-icon"><SearchX size={26}/></span><h3>{noSourceProfiles ? "No profiles in this snapshot" : "No matching MVPs"}</h3><p>{noSourceProfiles ? `This snapshot has no public profiles listed for ${country.name}.` : "Try a different search or give your filters a little more room."}</p>
       {result.relaxations.length > 0 && <div className="filter-relaxations" aria-label="Ways to find matching MVPs">{result.relaxations.map(({ key, count }) => <Button key={key} variant="outline" onClick={() => change({ [key]: key === "q" ? "" : [] })}>Remove {describeFilter(key, filters, countries)} · {formatCount(count)} {count === 1 ? "match" : "matches"}</Button>)}</div>}

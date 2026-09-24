@@ -6,6 +6,7 @@ import { Search, SlidersHorizontal, X, Check, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { useMedia } from "@/hooks/use-media";
 import { countries, formatCount, manifest } from "@/lib/catalog";
 import { EMPTY_FILTERS, hasFilters, normalize } from "@/lib/directory";
 import { useFilters } from "@/hooks/use-filters";
@@ -74,6 +75,7 @@ export function FilterBar({ facets, onInteract, onSubmit }: { facets?: Facets; o
   const { filters, setFilters } = useFilters();
   const search = useSearchParams();
   const resetButton = useRef<HTMLButtonElement>(null);
+  const mobile = useMedia("(max-width: 767px)");
   const change = (values: Partial<Filters>, replace = false) => { setFilters(values, replace); onInteract?.(values); };
   const extraCount = filters.technology.length + filters.region.length;
   return <div className="filter-bar">
@@ -89,9 +91,24 @@ export function FilterBar({ facets, onInteract, onSubmit }: { facets?: Facets; o
     <div className="filter-row">
       <ExpertisePicker kind="country" value={filters.country} facet={facets?.country} onSelect={country => change({ country })}/>
       <ExpertisePicker kind="category" value={filters.category} facet={facets?.category} onSelect={category => change({ category })}/>
+      {mobile
+        ? <ExpertisePicker kind="technology" value={filters.technology} facet={facets?.technology} onSelect={technology => change({ technology })}/>
+        : <Popover><PopoverTrigger asChild><Button variant="outline" className="more-filters" aria-label="More filters"><SlidersHorizontal size={14}/><span>Filters</span>{extraCount > 0 && <span className="filter-number">{extraCount}</span>}</Button></PopoverTrigger>
+          <PopoverContent className="more-filter-options w-80" align="end"><div className="space-y-4"><div><h3 className="font-semibold">Refine your discovery</h3><p className="mt-1 text-xs text-muted-foreground">Match any selection within a filter.</p></div>
+            <div className="space-y-2"><p className="text-xs font-medium">Technology expertise</p><ExpertisePicker kind="technology" value={filters.technology} facet={facets?.technology} onSelect={technology => change({ technology })}/></div>
+            <div className="space-y-2"><p className="text-xs font-medium">Region</p><ExpertisePicker kind="region" value={filters.region} facet={facets?.region} onSelect={region => change({ region })}/></div>
+            <Button ref={resetButton} variant="secondary" className="w-full" onClick={() => change({ technology: [], region: [] })}>Reset these filters</Button>
+            {hasFilters(filters) && <Button variant="ghost" className="w-full" onClick={() => {
+              change(EMPTY_FILTERS);
+              // Clear all disappears after reset; keep keyboard focus in the panel.
+              resetButton.current?.focus();
+            }}>Clear all</Button>}
+          </div></PopoverContent>
+        </Popover>}
+    </div>
+    {mobile && <div className="mobile-filter-actions">
       <Popover><PopoverTrigger asChild><Button variant="outline" className="more-filters" aria-label="More filters"><SlidersHorizontal size={14}/><span>Filters</span>{extraCount > 0 && <span className="filter-number">{extraCount}</span>}</Button></PopoverTrigger>
         <PopoverContent className="more-filter-options w-80" align="end"><div className="space-y-4"><div><h3 className="font-semibold">Refine your discovery</h3><p className="mt-1 text-xs text-muted-foreground">Match any selection within a filter.</p></div>
-          <div className="space-y-2"><p className="text-xs font-medium">Technology expertise</p><ExpertisePicker kind="technology" value={filters.technology} facet={facets?.technology} onSelect={technology => change({ technology })}/></div>
           <div className="space-y-2"><p className="text-xs font-medium">Region</p><ExpertisePicker kind="region" value={filters.region} facet={facets?.region} onSelect={region => change({ region })}/></div>
           <Button ref={resetButton} variant="secondary" className="w-full" onClick={() => change({ technology: [], region: [] })}>Reset these filters</Button>
           {hasFilters(filters) && <Button variant="ghost" className="w-full" onClick={() => {
@@ -101,7 +118,6 @@ export function FilterBar({ facets, onInteract, onSubmit }: { facets?: Facets; o
           }}>Clear all</Button>}
         </div></PopoverContent>
       </Popover>
-    </div>
-
+    </div>}
   </div>;
 }
