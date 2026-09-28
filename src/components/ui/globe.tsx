@@ -7,6 +7,7 @@ import createGlobe, { type COBEOptions } from "cobe";
 import { animate, useMotionValue, type MotionValue } from "motion/react";
 import { cn } from "@/lib/utils";
 import { cobeViewport, focusAngles, nearestAngle, type GlobeFrame, type GlobeLayout } from "@/lib/globe-geometry";
+import { GLOBE_MARKER_COLOR } from "@/lib/globe-palette";
 
 const INITIAL = focusAngles(20, 10);
 const clampScale = (value: number) => Math.max(0.7, Math.min(2.5, value));
@@ -14,7 +15,7 @@ const clampTheta = (value: number) => Math.max(-1.48, Math.min(1.48, value));
 const GLOBE_CONFIG: COBEOptions = {
   width: 800, height: 800, onRender: () => {}, devicePixelRatio: 2,
   ...INITIAL, dark: 0, diffuse: 0.4, mapSamples: 16000, mapBrightness: 1.2, mapBaseBrightness: 0,
-  baseColor: [1, 1, 1], markerColor: [251 / 255, 100 / 255, 21 / 255],
+  baseColor: [1, 1, 1], markerColor: GLOBE_MARKER_COLOR,
   glowColor: [1, 1, 1], markers: [],
 };
 

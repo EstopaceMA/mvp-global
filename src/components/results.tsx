@@ -9,8 +9,20 @@ import { countries, formatCount, manifest } from "@/lib/catalog";
 import { describeFilter, EMPTY_FILTERS, type QueryResult } from "@/lib/directory";
 import type { Filters } from "@/lib/types";
 
-export function ResultsSkeleton() {
-  return <div className="results-grid" aria-label="Loading profiles" role="status">{Array.from({ length: 6 }, (_, index) => <Skeleton key={index} className="h-64 rounded-xl"/>)}<span className="sr-only">Loading MVP profiles</span></div>;
+export function ResultsSkeleton({ compact = false }: { compact?: boolean }) {
+  return <div className={compact ? "results-container compact-results" : "results-container"}>
+    <div className="results-grid" aria-label="Loading profiles" role="status">
+      {Array.from({ length: 6 }, (_, index) => <div key={index} className="profile-skeleton" aria-hidden="true">
+        <div className="profile-content">
+          <div className="profile-top"><Skeleton className="profile-skeleton-avatar"/><div className="profile-skeleton-identity"><Skeleton className="profile-skeleton-name"/><Skeleton className="profile-skeleton-country"/></div></div>
+          <Skeleton className="profile-skeleton-category"/>
+          <Skeleton className="profile-skeleton-line"/><Skeleton className="profile-skeleton-line"/>
+          <div className="profile-skeleton-link"><Skeleton className="profile-skeleton-country"/></div>
+        </div>
+      </div>)}
+      <span className="sr-only">Loading MVP profiles</span>
+    </div>
+  </div>;
 }
 
 export function DataError() {
@@ -23,7 +35,7 @@ export function Results({ result, compact = false, onInteract }: { result: Query
   const { filters, setFilters } = useFilters();
   const country = filters.country.length === 1 ? countries.find(country => country.slug === filters.country[0]) : undefined;
   const change = (values: Partial<Filters>) => { setFilters(values); onInteract?.(); };
-  if (!result) return error ? <DataError/> : <ResultsSkeleton/>;
+  if (!result) return error ? <DataError/> : <ResultsSkeleton compact={compact}/>;
   const noSourceProfiles = country && !manifest.counts[country.id];
   return <div className={compact ? "results-container compact-results" : "results-container"}>
     <div className="results-meta"><p role="status" aria-live="polite"><strong>{formatCount(result.total)}</strong> {result.total === 1 ? "MVP" : "MVPs"}{country ? ` in ${country.name}` : filters.country.length ? ` in ${filters.country.length} countries` : " to discover"}</p><span>NAME A–Z</span></div>

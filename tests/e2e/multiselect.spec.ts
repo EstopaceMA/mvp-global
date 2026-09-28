@@ -137,7 +137,8 @@ test("all views keep selections inside dropdowns and expose global reset only in
     await expect(page.getByRole("button", { name: "Clear all", exact: true })).toHaveCount(0);
     await expect(page.getByRole("combobox", { name: "Select award category", exact: true })).toHaveText("2 award categories");
     const bounds = (await page.locator(".filter-bar").boundingBox())!;
-    expect(bounds.height).toBeLessThan(110);
+    // The globe's filter bar stays a single row; directory pages stack it in the 260px rail.
+    expect(bounds.height).toBeLessThan(path === "/" ? 110 : 230);
     if (path === "/") await page.screenshot({ path: `test-results/globe-no-chips-${testInfo.project.name}.png`, scale: "css" });
     await page.getByRole("button", { name: "Clear search", exact: true }).click();
     await expect(page.getByRole("textbox", { name: "Search MVPs" })).toHaveValue("");

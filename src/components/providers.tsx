@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider, useTheme } from "next-themes";
+import { usePathname } from "next/navigation";
 import Clarity from "@microsoft/clarity";
 import { Analytics } from "@vercel/analytics/next";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,6 +24,16 @@ interface DirectoryContextValue { profiles: MvpProfile[] | null; error: string |
 const DirectoryContext = createContext<DirectoryContextValue>({ profiles: null, error: null, retry: () => {} });
 export const useDirectory = () => useContext(DirectoryContext);
 
+function ThemeColor() {
+  const { resolvedTheme } = useTheme();
+  const pathname = usePathname();
+  useEffect(() => {
+    if (!resolvedTheme) return;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", resolvedTheme === "dark" ? "#111111" : "#ffffff");
+  }, [resolvedTheme, pathname]);
+  return null;
+}
+
 export function Providers({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (process.env.NODE_ENV === "production") {
@@ -41,7 +52,8 @@ export function Providers({ children }: { children: React.ReactNode }) {
     loadProfiles().then(data => { if (active) setProfiles(data); }).catch(() => { if (active) setError("We couldn’t load the directory. Please try again."); });
     return () => { active = false; };
   }, []);
-  return <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+  return <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
+    <ThemeColor/>
     <TooltipProvider delayDuration={250}>
       <DirectoryContext.Provider value={{ profiles, error, retry }}>{children}</DirectoryContext.Provider>
     </TooltipProvider>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { ArrowUpRight, ArrowRight, Globe2, MousePointer2, Users, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetClose } from "@/components/ui/sheet";
@@ -14,8 +14,13 @@ import { useMedia } from "@/hooks/use-media";
 import { countries, formatCount, manifest, snapshotDate } from "@/lib/catalog";
 import { filterParams, hasFilters, updateFilters, viewHref } from "@/lib/directory";
 import type { Filters } from "@/lib/types";
+import { GLOBE_LEGEND_GRADIENTS } from "@/lib/globe-palette";
 
 const EMPTY_COUNTS: Record<string, number> = {};
+const legendStyle = {
+  "--globe-legend-light": GLOBE_LEGEND_GRADIENTS.light,
+  "--globe-legend-dark": GLOBE_LEGEND_GRADIENTS.dark,
+} as CSSProperties;
 
 export function Explorer() {
   const { filters, setFilters } = useFilters();
@@ -56,7 +61,7 @@ export function Explorer() {
   const activeCountries = Object.values(counts).filter(Boolean).length;
   return <main id="main-content" className={`explorer ${showResults ? "sheet-open" : ""} ${hasFilters(filters) ? "has-filters" : ""} ${failed ? "globe-unavailable" : ""}`}>
     <div className="atlas-grid" aria-hidden="true"/>
-    {!failed && <GlobeClient counts={counts} countsPending={countsPending} selected={filters.country} sheetOpen={showResults} onSelect={onSelect} onFailure={onFailure}/>}
+    {!failed && <GlobeClient counts={counts} countsPending={countsPending} selected={filters.country} sheetOpen={showResults} introHidden={hasFilters(filters)} onSelect={onSelect} onFailure={onFailure}/>}
     <div className="explorer-search"><FilterBar facets={result?.facets} onInteract={onFilterInteraction} onSubmit={() => setOpened(true)}/><DataError/></div>
     <section className="explorer-intro" aria-label="Welcome to the community atlas">
       <h1>One community.<br/>A world of<br/><span>possibilities.</span></h1>
@@ -64,7 +69,7 @@ export function Explorer() {
     </section>
     {failed && <section className="globe-fallback" role="status"><span className="fallback-icon"><Globe2 size={36}/></span><h2>A world of expertise.<br/>Another way to explore.</h2><p>The 3D globe isn’t available on this device. Every MVP is still a search away.</p><Button asChild><Link href={viewHref("/mvps", filters)}>Open the directory<ArrowRight size={16}/></Link></Button><p className="text-xs">Or choose a country above to browse its profiles here.</p></section>}
     <div className="atlas-stats"><div><span className="stat-value">{total === undefined ? "—" : formatCount(total)}</span><span className="stat-label"><Users size={12}/>MICROSOFT MVPs</span></div><div className="stat-divider"/><div><span className="stat-value">{countsPending ? "—" : activeCountries}</span><span className="stat-label"><Globe2 size={12}/>COUNTRIES & REGIONS</span></div></div>
-    {!countsPending && <div className="globe-legend"><span>MVPs BY COUNTRY</span><div className="legend-ramp"/><div className="legend-values"><span>0</span><span>{formatCount(Math.max(1, ...Object.values(counts)))}</span></div><small>Marker size & color · logarithmic scale</small></div>}
+    {!countsPending && <div className="globe-legend"><span>MVPs BY COUNTRY</span><div className="legend-ramp" style={legendStyle}/><div className="legend-values"><span>0</span><span>{formatCount(Math.max(1, ...Object.values(counts)))}</span></div><small>Marker size & color · logarithmic scale</small></div>}
     <div className="atlas-bottom"><p><MousePointer2 size={13}/>Drag to explore <span>·</span> Scroll to zoom</p><span className="snapshot-label"><span className="status-dot"/>Snapshot · {snapshotDate}</span><Link href="/about">About this atlas<ArrowUpRight size={12}/></Link></div>
     <Button className="show-results-button" ref={resultsButton} onClick={() => setOpened(true)}><Users size={15}/>{resultCount === undefined ? "View MVPs" : `View ${formatCount(resultCount)} MVPs`}<ArrowRight size={15}/></Button>
     <Sheet open={showResults} onOpenChange={onOpenChange} modal={mobile}>

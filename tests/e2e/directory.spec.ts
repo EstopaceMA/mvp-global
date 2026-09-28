@@ -48,9 +48,9 @@ test("directory search, pagination, theme, country pages, and history preserve s
   await expect(page).toHaveURL(/\/?q=Philippines/);
   await page.getByRole("button", { name: "Close results" }).click();
   await page.getByRole("button", { name: "Toggle color theme" }).click();
-  await expect(page.locator("html")).toHaveClass(/light/);
+  await expect(page.locator("html")).toHaveClass(/dark/);
   await page.reload();
-  await expect(page.locator("html")).toHaveClass(/light/);
+  await expect(page.locator("html")).toHaveClass(/dark/);
   await page.goto("/countries/philippines");
   await expect(page.locator("h1")).toContainText("Philippines");
   await expect(page.locator(".profile-card")).toHaveCount(8);

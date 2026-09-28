@@ -13,17 +13,19 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { countries, countryById, formatCount, manifest } from "@/lib/catalog";
 import { useMedia } from "@/hooks/use-media";
 import { countryAtPoint, projectLocation, unprojectLocation, type CountryFeature, type GlobeFrame } from "@/lib/globe-geometry";
+import { globeMarkerColor } from "@/lib/globe-palette";
 
 export interface GlobeViewProps {
   counts: Record<string, number>;
   countsPending?: boolean;
   selected: string[];
   sheetOpen: boolean;
+  introHidden: boolean;
   onSelect(slug: string): void;
   onFailure(): void;
 }
 
-export default function GlobeView({ counts, countsPending = false, selected, sheetOpen, onSelect, onFailure }: GlobeViewProps) {
+export default function GlobeView({ counts, countsPending = false, selected, sheetOpen, introHidden, onSelect, onFailure }: GlobeViewProps) {
   const host = useRef<HTMLDivElement>(null);
   const globe = useRef<GlobeHandle>(null);
   const clickAudio = useRef<HTMLAudioElement>(null);
@@ -36,7 +38,7 @@ export default function GlobeView({ counts, countsPending = false, selected, she
   const [ready, setReady] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
   const { resolvedTheme } = useTheme();
-  const dark = resolvedTheme !== "light";
+  const dark = resolvedTheme === "dark";
   const reducedMotion = useMedia("(prefers-reduced-motion: reduce)");
   const mobile = useMedia("(max-width: 767px)");
   const country = countries.find(entry => entry.slug === selected.at(-1));
@@ -47,8 +49,8 @@ export default function GlobeView({ counts, countsPending = false, selected, she
   const config = useMemo<Partial<COBEOptions>>(() => ({
     dark: dark ? 1 : 0, diffuse: 0.4, mapSamples: mobile ? 18000 : 24000,
     mapBrightness: dark ? 5 : 1.2,
-    baseColor: dark ? [0.42, 0.55, 0.78] : [0.92, 0.95, 1],
-    glowColor: dark ? [0.025, 0.075, 0.16] : [0.75, 0.81, 0.9],
+    baseColor: dark ? [0.52, 0.52, 0.52] : [1, 1, 1],
+    glowColor: dark ? [17 / 255, 17 / 255, 17 / 255] : [1, 1, 1],
     // All 105 country markers live in the projected overlay, avoiding COBE 0.6's 64-marker limit.
     markers: [],
   }), [dark, mobile]);
@@ -125,12 +127,14 @@ export default function GlobeView({ counts, countsPending = false, selected, she
   };
   const tablet = !mobile && size.width <= 1100;
   const availableWidth = mobile ? size.width : sheetOpen ? Math.max(260, size.width - 440) : tablet ? size.width - 280 : size.width;
-  const mobileGlobeTop = size.width <= 370 ? 330 : 250;
+  // The intro heading reserves this much room above the globe; once it's hidden (filters active or the sheet is open), the globe can move up to fill that space.
+  const mobileGlobeTop = introHidden || sheetOpen ? 130 : size.width <= 370 ? 330 : 250;
   const mobileGlobeBottom = size.height - 160;
   const side = mobile
     ? Math.max(0, Math.min(availableWidth * 1.05, (mobileGlobeBottom - mobileGlobeTop) / 0.8))
     : Math.min(size.height * 0.95, availableWidth * (sheetOpen ? 1.25 : tablet ? 1.1 : 0.85));
-  const centerX = mobile ? size.width / 2 : sheetOpen ? availableWidth / 2 : tablet ? (size.width + 280) / 2 : size.width * 0.59;
+  // Desktop matches the tablet tier's fixed offset instead of scaling with width, so wide screens don't leave a growing gap beside the intro text.
+  const centerX = mobile ? size.width / 2 : sheetOpen ? availableWidth / 2 : tablet ? (size.width + 280) / 2 : Math.min(size.width * 0.59, size.width / 2 + 150);
   const centerY = mobile ? (mobileGlobeTop + mobileGlobeBottom) / 2 : size.height / 2 + 5;
   const hoverCount = hovered ? counts[hovered] ?? 0 : 0;
 
@@ -164,15 +168,15 @@ export default function GlobeView({ counts, countsPending = false, selected, she
           const intensity = Math.log1p(count) / Math.log1p(maximum);
           const radius = 3 + intensity * 4;
           const chosen = selected.includes(entry.slug);
-          const color = dark ? "hsl(213 95% " + (48 + intensity * 32) + "%)" : "hsl(213 85% " + (52 - intensity * 20) + "%)";
+          const color = globeMarkerColor(intensity, dark);
           const countLabel = countsPending ? "—" : formatCount(count);
           const label = chosen ? entry.name + " · " + countLabel : countLabel;
           return <g key={entry.id} data-country-marker={entry.slug} ref={element => { if (element) markerElements.current.set(entry.id, element); else markerElements.current.delete(entry.id); }} style={{ display: "none" }}>
             <circle r={radius + 5} fill={color} fillOpacity={chosen ? 0.22 : 0.1}/>
             {chosen && <circle r={radius + 7} className="globe-marker-ring"/>}
-            <circle r={radius} fill={color} stroke={dark ? "#dcecff" : "#ffffff"} strokeWidth={chosen ? 2 : 0.7}/>
+            <circle r={radius} fill={color} stroke={dark ? "#111111" : "#ffffff"} strokeWidth={chosen ? 2 : 0.7}/>
             {(chosen || labels.has(entry.id)) && <g data-marker-label data-width={label.length * 6.8 + 14} data-offset={-radius - 12} transform={"translate(0 " + (-radius - 12) + ")"}>
-              <rect x={-label.length * 3.4 - 7} y={-9} width={label.length * 6.8 + 14} height={20} rx={6} className="globe-marker-label-bg"/>
+              <rect x={-label.length * 3.4 - 7} y={-9} width={label.length * 6.8 + 14} height={20} rx={2} className="globe-marker-label-bg"/>
               <text textAnchor="middle" dominantBaseline="middle" className="globe-marker-label">{label}</text>
             </g>}
           </g>;
