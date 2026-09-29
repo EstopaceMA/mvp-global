@@ -120,9 +120,8 @@
 .zoom-buttons { display: flex; flex-direction: column; align-items: center; }
 .zoom-buttons span { width: 18px; height: 1px; background: var(--border); }
 .atlas-bottom { position: absolute; bottom: 19px; left: var(--gutter); right: var(--gutter); display: flex; align-items: center; justify-content: space-between; color: var(--muted-foreground); font: 11px var(--font-mono); }
-.atlas-bottom > p, .atlas-bottom > a, .snapshot-label { font: 11px var(--font-mono); }
+.atlas-bottom > p, .atlas-bottom > a, .snapshot-label { display: flex; align-items: center; gap: 8px; font: 11px var(--font-mono); }
 .atlas-bottom p span { opacity: .5; }
-.snapshot-label { font-family: var(--font-mono); font-size: 11px; }
 .show-results-button { position: absolute; bottom: 76px; left: calc(50% + 60px); transform: translateX(-50%); font: 13px var(--font-mono); height: 48px; padding: 0 22px; gap: 10px; }
 .sheet-open .explorer-intro { opacity: 0; visibility: hidden; }
 .sheet-open .explorer-search { left: calc((100% - 440px) / 2); }
