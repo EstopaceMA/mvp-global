@@ -59,7 +59,7 @@
 .dark .theme-icon-moon { opacity: 0; transform: rotate(90deg) scale(.6); }
 .eyebrow { color: var(--muted-foreground); font-family: var(--font-mono); font-size: .6875rem; letter-spacing: .09em; display: flex; align-items: center; gap: 8px; font-weight: 450; }
 .status-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: var(--foreground); flex-shrink: 0; }
-.explorer { position: relative; height: calc(100dvh - 80px); min-height: 660px; overflow: hidden; isolation: isolate; }
+.explorer { --explorer-center-x: calc(50% + 72px); position: relative; height: calc(100dvh - 80px); min-height: 660px; overflow: hidden; isolation: isolate; }
 .atlas-grid { position: absolute; inset: 0; z-index: -1; background-image: radial-gradient(var(--border) .6px, transparent .6px); background-size: 26px 26px; mask-image: linear-gradient(to bottom, transparent, #000 13%, #000 85%, transparent); opacity: .35; pointer-events: none; }
 .globe-host, .globe-renderer { position: absolute; inset: 0; }
 .globe-renderer canvas { touch-action: none; }
@@ -80,7 +80,7 @@
 .explorer-intro h1 { font-size: 42px; font-weight: 500; line-height: 1.2; letter-spacing: -1px; margin-top: 0; }
 .explorer-intro h1 span, .directory-heading h1 span, .about-page h1 span { color: var(--blue-soft); }
 .intro-copy { font: 13px/1.6 var(--font-mono); color: var(--muted-foreground); margin-top: 22px; }
-.explorer-search { position: absolute; top: 28px; left: calc(50% + 72px); transform: translateX(-50%); width: 520px; z-index: 10; }
+.explorer-search { position: absolute; top: 28px; left: var(--explorer-center-x); transform: translateX(-50%); width: 520px; z-index: 10; }
 .filter-bar { width: 100%; }
 .search-field { display: flex; align-items: center; gap: 12px; background: var(--surface); border: 1px solid var(--muted-foreground); border-radius: 2px; padding: 0 12px; color: var(--muted-foreground); height: 48px; }
 .search-field input { border: 0; box-shadow: none; outline: none; padding: 0; border-radius: 0; background: transparent !important; height: 44px; font: 13px var(--font-mono); color: var(--foreground); min-width: 0; }
@@ -122,7 +122,7 @@
 .atlas-bottom { position: absolute; bottom: 19px; left: var(--gutter); right: var(--gutter); display: flex; align-items: center; justify-content: space-between; color: var(--muted-foreground); font: 11px var(--font-mono); }
 .atlas-bottom > p, .atlas-bottom > a, .snapshot-label { display: flex; align-items: center; gap: 8px; font: 11px var(--font-mono); }
 .atlas-bottom p span { opacity: .5; }
-.show-results-button { position: absolute; bottom: 76px; left: calc(50% + 60px); transform: translateX(-50%); font: 13px var(--font-mono); height: 48px; padding: 0 22px; gap: 10px; }
+.show-results-button { position: absolute; bottom: 76px; left: var(--explorer-center-x); transform: translateX(-50%); font: 13px var(--font-mono); height: 48px; padding: 0 22px; gap: 10px; }
 .sheet-open .explorer-intro { opacity: 0; visibility: hidden; }
 .sheet-open .explorer-search { left: calc((100% - 440px) / 2); }
 .sheet-open .show-results-button, .sheet-open .globe-legend { opacity: 0; visibility: hidden; pointer-events: none; }
@@ -285,7 +285,7 @@ body, .site-header, .primary-nav, .profile-card, .profile-avatar, .search-field,
   .directory-heading h1, .country-heading h1, .about-page h1 { font-size: 36px; }
   .site-header { padding: 0 var(--gutter); }.program-link { display: none; }
   .explorer-intro { left: 30px; top: 138px; max-width: 250px; }.explorer-intro h1 { font-size: 36px; }
-  .explorer-search { width: 445px; left: calc(50% + 55px); }.atlas-stats { left: 30px; gap: 18px; }
+  .explorer { --explorer-center-x: calc(50% + 55px); }.explorer-search { width: 445px; }.atlas-stats { left: 30px; gap: 18px; }
   .sheet-open .explorer-search { left: 24px; transform: none; width: calc(100% - 470px); }.sheet-open .filter-row { flex-wrap: wrap; }
   .sheet-open .atlas-stats { gap: 16px; }.results-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .directory-tools { position: static; gap: 12px; }

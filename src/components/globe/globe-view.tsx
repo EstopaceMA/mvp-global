@@ -33,7 +33,7 @@ export default function GlobeView({ counts, countsPending = false, selected, she
   const selectionPath = useRef<SVGPathElement>(null);
   const hoverPath = useRef<SVGPathElement>(null);
   const hoverTip = useRef<HTMLDivElement>(null);
-  const [size, setSize] = useState({ width: 0, height: 0 });
+  const [size, setSize] = useState({ width: 0, height: 0, centerX: 0 });
   const [polygons, setPolygons] = useState<CountryFeature[]>([]);
   const [ready, setReady] = useState(false);
   const [hovered, setHovered] = useState<string | null>(null);
@@ -56,10 +56,23 @@ export default function GlobeView({ counts, countsPending = false, selected, she
   }), [dark, mobile]);
 
   useEffect(() => {
-    const observer = new ResizeObserver(([entry]) => setSize({ width: entry.contentRect.width, height: entry.contentRect.height }));
-    if (host.current) observer.observe(host.current);
+    const element = host.current;
+    if (!element) return;
+    const search = element.parentElement?.querySelector(".explorer-search");
+    const observer = new ResizeObserver(() => {
+      const bounds = element.getBoundingClientRect();
+      const searchBounds = search?.getBoundingClientRect();
+      setSize({
+        width: bounds.width,
+        height: bounds.height,
+        centerX: searchBounds ? searchBounds.left + searchBounds.width / 2 - bounds.left : bounds.width / 2,
+      });
+    });
+    observer.observe(element);
+    if (search) observer.observe(search);
     return () => observer.disconnect();
-  }, []);
+    // Opening the sheet can move the search bar without changing its width.
+  }, [sheetOpen, mobile]);
   useEffect(() => {
     const abort = new AbortController();
     fetch("/geo/countries.topo.json", { signal: abort.signal }).then(response => {
@@ -133,14 +146,12 @@ export default function GlobeView({ counts, countsPending = false, selected, she
   const side = mobile
     ? Math.max(0, Math.min(availableWidth * 1.05, (mobileGlobeBottom - mobileGlobeTop) / 0.8))
     : Math.min(size.height * 0.95, availableWidth * (sheetOpen ? 1.25 : tablet ? 1.1 : 0.85));
-  // Desktop matches the tablet tier's fixed offset instead of scaling with width, so wide screens don't leave a growing gap beside the intro text.
-  const centerX = mobile ? size.width / 2 : sheetOpen ? availableWidth / 2 : tablet ? (size.width + 280) / 2 : Math.min(size.width * 0.59, size.width / 2 + 150);
   const centerY = mobile ? (mobileGlobeTop + mobileGlobeBottom) / 2 : size.height / 2 + 5;
   const hoverCount = hovered ? counts[hovered] ?? 0 : 0;
 
   return <div ref={host} className="globe-host" data-testid="globe-container" data-renderer="magic-ui-cobe" data-ready={ready}>
     <audio ref={clickAudio} src="/click-effect.mp3" preload="auto" />
-    {side > 0 && polygons.length > 0 && <Globe ref={globe} className="globe-renderer" layout={{ centerX, centerY, radius: side * 0.4 }}
+    {side > 0 && polygons.length > 0 && <Globe ref={globe} className="globe-renderer" layout={{ centerX: size.centerX, centerY, radius: side * 0.4 }}
       config={config} reducedMotion={reducedMotion} onReady={() => setReady(true)} onFailure={onFailure} onFrame={renderFrame}
       onPick={(x, y, frame) => {
         const id = hitTest(x, y, frame);
