@@ -72,7 +72,7 @@ Search matches names, countries, regions, award categories, and technologies, ig
 
 ## Refreshing the data
 
-Profile data comes from a prepared, version-controlled snapshot, not a live Microsoft directory API. Portrait images are loaded from Microsoft's image host by the image optimizer and social preview renderer. A separate, independent scraper package collects the snapshot:
+Profile data comes from a prepared, version-controlled snapshot, not a live Microsoft directory API. On-page portraits load from Microsoft's image host using their original URLs, with lazy loading in results, eager loading on profile pages, and initials on failure. Local logos remain optimized, and the server-side social preview renderer fetches portraits independently. A separate, independent scraper package collects the snapshot:
 
 ```sh
 # 1. Scrape a fresh export (see mvp-scraper/README.md)

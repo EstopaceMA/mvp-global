@@ -35,6 +35,10 @@ const interactiveMedia = "(hover: hover) and (pointer: fine) and (prefers-reduce
 const portraitFixture = readFileSync(new URL("../../public/mvp-logo.png", import.meta.url));
 
 function microsoftPortrait(url: URL) {
+    return url.origin === "https://images.mvp.microsoft.com";
+}
+
+function optimizedMicrosoftPortrait(url: URL) {
     const original = url.searchParams.get("url");
     if (url.pathname !== "/_next/image" || !original) return false;
     try { return new URL(original).origin === "https://images.mvp.microsoft.com"; }
@@ -46,8 +50,9 @@ test.beforeEach(async ({ page, baseURL }) => {
     const origin = new URL(baseURL!).origin;
     await page.route(url => url.origin !== origin, route => route.fulfill({ status: 204, body: "" }));
     // Leave local brand images alone; no test relies on the remote portrait service.
+    // Verify original portrait URLs work independently of optimizer availability.
+    await page.route(optimizedMicrosoftPortrait, route => route.fulfill({ status: 402, body: "OPTIMIZED_IMAGE_REQUEST_PAYMENT_REQUIRED" }));
     await page.route(microsoftPortrait, route => route.fulfill({ contentType: "image/png", body: portraitFixture }));
-    await page.route("https://images.mvp.microsoft.com/**", route => route.fulfill({ contentType: "image/png", body: portraitFixture }));
     await page.emulateMedia({ reducedMotion: "no-preference" });
 });
 
@@ -84,9 +89,9 @@ async function expectLoadedPortrait(page: Page, profile: MvpProfile) {
         const image = element as HTMLImageElement;
         return image.complete && image.naturalWidth > 0;
     })).toBe(true);
-    const optimized = new URL(await image.evaluate(element => (element as HTMLImageElement).currentSrc));
-    expect(optimized.pathname).toBe("/_next/image");
-    expect(optimized.searchParams.get("url")).toBe(profile.photoUrl);
+    await expect(image).toHaveJSProperty("currentSrc", profile.photoUrl);
+    expect(await image.getAttribute("srcset")).toBeNull();
+    await expect(image).toHaveAttribute("loading", "eager");
     await expect(page.locator(".mvp-id-portrait span")).toHaveCount(0);
 }
 
@@ -381,7 +386,7 @@ for (const surface of ["/mvps", `/countries/${us.slug}`, "/"]) {
     }
 }
 
-test("missing portraits show initials, while optimized successful portraits retain the complete original URL", async ({ page }) => {
+test("missing portraits show initials, while direct successful portraits retain the complete original URL", async ({ page }) => {
     await page.goto(`/mvps/${missingPhoto.id}`);
     await expectProfile(page, missingPhoto);
     await expectInitials(page, missingPhoto);
@@ -390,10 +395,36 @@ test("missing portraits show initials, while optimized successful portraits reta
     await expectLoadedPortrait(page, queryPhoto);
 });
 
-test("failed Microsoft optimized portraits with query strings show initials without intercepting brand images", async ({ page }) => {
+test("directory and ID-card portraits use original URLs while logos remain optimized", async ({ page }) => {
+    const optimizedRequests: string[] = [];
+    page.on("request", request => {
+        if (optimizedMicrosoftPortrait(new URL(request.url()))) optimizedRequests.push(request.url());
+    });
+    // Microsoft's real blob responses can use this MIME type, even for valid images.
+    await page.route(microsoftPortrait, route => route.fulfill({ contentType: "application/octet-stream", body: portraitFixture }));
+    const query = new URLSearchParams({ q: queryPhoto.name });
+    await page.goto(`/mvps?${query}`);
+    const row = page.locator(".profile-card").filter({ has: page.locator(`h3 a[href^="/mvps/${queryPhoto.id}?"]`) });
+    const portrait = row.locator(".profile-avatar img");
+    await portrait.scrollIntoViewIfNeeded();
+    await expect(portrait).toHaveAttribute("loading", "lazy");
+    await expect(portrait).toHaveJSProperty("currentSrc", queryPhoto.photoUrl);
+    expect(await portrait.getAttribute("srcset")).toBeNull();
+    await expect.poll(() => portrait.evaluate(image => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+    await row.locator("h3 a").click();
+    await expectLoadedPortrait(page, queryPhoto);
+    const logo = page.locator(".mvp-id-brand img");
+    await expect.poll(() => logo.evaluate(image => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
+    const logoSource = new URL(await logo.evaluate(image => (image as HTMLImageElement).currentSrc));
+    expect(logoSource.pathname).toBe("/_next/image");
+    expect(logoSource.searchParams.get("url")).toBe("/mvp-logo.png");
+    expect(optimizedRequests).toEqual([]);
+});
+
+test("failed direct Microsoft portraits with query strings show initials without intercepting brand images", async ({ page }) => {
     const aborted: string[] = [];
     await page.route(microsoftPortrait, route => {
-        aborted.push(new URL(route.request().url()).searchParams.get("url")!);
+        aborted.push(route.request().url());
         return route.abort();
     });
     await page.goto(`/mvps/${queryPhoto.id}`);
@@ -406,7 +437,7 @@ test("failed Microsoft optimized portraits with query strings show initials with
 });
 
 test("duplicate names link to distinct IDs and navigating identities resets portrait failure and tilt", async ({ page }) => {
-    await page.route(microsoftPortrait, route => new URL(route.request().url()).searchParams.get("url") === duplicates[0].photoUrl
+    await page.route(microsoftPortrait, route => route.request().url() === duplicates[0].photoUrl
         ? route.abort() : route.fulfill({ contentType: "image/png", body: portraitFixture }));
     const query = new URLSearchParams({ q: duplicates[0].name });
     await page.goto(`/mvps?${query}`);

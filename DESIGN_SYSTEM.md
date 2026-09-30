@@ -25,7 +25,7 @@ The source of truth is `src/app/globals.css`. Use its semantic variables and the
 - Use desktop/tablet/mobile gutters of 30/24/16px and grid gaps of 30/20/20px. The responsive boundaries are 1100px and 767px, matching globe geometry.
 - Content pages have a maximum width of 1440px. Above 1100px, a sticky 260px filter rail sits beside three profile columns. Tablet shows filters above two columns; mobile shows one column. About has an 800px reading column.
 - Preserve the header's 80px desktop and 66px mobile heights. The explorer retains its viewport composition and a 440px desktop results panel; mobile results occupy the full screen.
-- Portrait thumbnails are 56px. Names, categories, and expertise wrap rather than truncate. Failed portrait requests show initials.
+- Portrait thumbnails are 56px. Profile photos use their original Microsoft URLs, with lazy loading in results and eager loading on profile pages; local brand images remain optimized. Names, categories, and expertise wrap rather than truncate. Failed portrait requests show initials.
 - Make interactive targets at least 44px, keep mobile input text at 16px, and show a 2px blue focus outline. Keep native keyboard behavior, labels, announcements, and focus restoration intact.
 - Controls transition for 150–200ms; panels transition for 250ms. Honor reduced motion and forced colors. Layouts must remain usable at 200% zoom.
 - First visits use light mode. The theme toggle persists explicit choices in the existing `theme` storage key. Browser theme color follows the selected theme rather than operating-system preference.

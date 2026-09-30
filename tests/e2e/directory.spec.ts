@@ -59,8 +59,7 @@ test("directory search, pagination, theme, country pages, and history preserve s
 });
 
 test("filters combine, zero results reset, and failed photos show initials", async ({ page }) => {
-  await page.route(url => url.pathname === "/_next/image"
-    && (url.searchParams.get("url") ?? "").startsWith("https://images.mvp.microsoft.com/"), route => route.abort());
+  await page.route(url => url.origin === "https://images.mvp.microsoft.com", route => route.abort());
   await page.goto("/mvps?country=philippines&category=Microsoft+Azure");
   await expect(page.locator(".profile-card").first()).toBeVisible();
   await expect(page.locator(".profile-avatar span").first()).toBeVisible();
