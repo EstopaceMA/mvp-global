@@ -2389,24 +2389,112 @@ body,
   padding-top: 36px;
 }
 
+.mvp-profile-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
 .mvp-profile-page .back-link {
   font-size: 13px;
-  margin-bottom: 32px;
+  margin-bottom: 0;
 }
 
 .mvp-profile-page .back-link:hover {
   color: var(--foreground);
 }
 
+.mvp-share-options {
+  width: min(288px, calc(100vw - 32px));
+  max-height: var(--radix-popover-content-available-height);
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.mvp-share-title {
+  padding: 8px 12px;
+  font-weight: 500;
+}
+
+.mvp-share-option {
+  width: 100%;
+  justify-content: space-between;
+}
+
+.mvp-share-copy {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.mvp-share-status,
+.mvp-share-manual {
+  padding: 8px 12px;
+  overflow-wrap: anywhere;
+}
+
+.mvp-share-status {
+  color: var(--muted-foreground);
+}
+
+.mvp-share-manual label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mvp-share-options {
+    animation: none !important;
+  }
+}
+
 .mvp-id-stage {
+  position: relative;
+  container-type: inline-size;
   width: 100%;
   max-width: 640px;
   margin: 0 auto;
+}
+
+.mvp-id-stage,
+.mvp-id-stage * {
+  cursor: default;
+}
+
+/* One design canvas: scale this wrapper, independently of the card's tilt. */
+.mvp-id-canvas {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: var(--mvp-id-width);
+  height: var(--mvp-id-height);
+  transform-origin: top left;
+  transform: scale(var(--mvp-id-scale, var(--mvp-id-measured-scale, 1)));
   perspective: 1000px;
+}
+
+/* Even the global reduced-motion duration must not animate layout measurements.
+   Pointer motion is driven exclusively by the existing Motion springs. */
+.mvp-id-canvas,
+.mvp-id-card,
+.mvp-id-card * {
+  transition-property: none;
+}
+
+/* Fit server-rendered cards before hydration in browsers with typed arithmetic.
+   ResizeObserver supplies the same scale for other browsers and parent resizes. */
+@supports (transform: scale(calc(1px / 1px))) {
+  .mvp-id-canvas {
+    --mvp-id-scale: calc(100cqw / var(--mvp-id-width));
+  }
 }
 
 .mvp-id-card {
   position: relative;
+  width: 100%;
+  height: 100%;
   isolation: isolate;
   overflow: hidden;
   border-radius: 24px;
@@ -2495,10 +2583,16 @@ body,
 .mvp-id-content {
   position: relative;
   z-index: 1;
-  padding: 32px;
+  height: 100%;
+  white-space: nowrap;
 }
 
 .mvp-id-brand {
+  position: absolute;
+  top: 32px;
+  left: 32px;
+  right: 32px;
+  height: 44px;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -2524,14 +2618,20 @@ body,
 }
 
 .mvp-id-identity {
+  position: absolute;
+  top: 112px;
+  left: 32px;
+  right: 32px;
   display: grid;
   grid-template-columns: 144px minmax(0, 1fr);
+  grid-template-rows: 80px 100px;
+  grid-template-areas: "portrait details" "portrait awards";
   align-items: start;
-  gap: 28px;
-  margin: 36px 0;
+  gap: 16px 28px;
 }
 
 .mvp-id-portrait {
+  grid-area: portrait;
   position: relative;
   display: grid;
   place-items: center;
@@ -2550,16 +2650,24 @@ body,
 }
 
 .mvp-id-details {
+  grid-area: details;
   min-width: 0;
 }
 
 .mvp-id-details h1 {
-  font-size: clamp(28px, 3vw, 36px);
+  display: flex;
+  align-items: center;
+  height: 44px;
+  font-size: 36px;
+  font-optical-sizing: none;
   font-weight: 500;
   line-height: 1.15;
   letter-spacing: -.035em;
-  overflow-wrap: anywhere;
-  text-wrap: balance;
+}
+
+.mvp-id-details h1 span {
+  display: inline-block;
+  flex-shrink: 0;
 }
 
 .mvp-id-country {
@@ -2569,7 +2677,6 @@ body,
   margin-top: 12px;
   color: #d0d3db;
   font: 13px/1.6 var(--font-mono);
-  overflow-wrap: anywhere;
 }
 
 .mvp-id-country svg {
@@ -2578,7 +2685,8 @@ body,
 }
 
 .mvp-id-awards {
-  margin-top: 24px;
+  grid-area: awards;
+  min-width: 0;
 }
 
 .mvp-id-awards h2 {
@@ -2590,7 +2698,8 @@ body,
 
 .mvp-id-awards ul {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 7px;
   margin-top: 8px;
 }
@@ -2602,12 +2711,14 @@ body,
   border: 1px solid #595e6b;
   border-radius: 5px;
   font: 12px/1.6 var(--font-mono);
-  overflow-wrap: anywhere;
 }
 
 .mvp-id-bottom {
+  position: absolute;
+  left: 32px;
+  right: 32px;
+  bottom: 32px;
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   gap: 12px;
   border-top: 1px solid #ffffff26;
@@ -2620,7 +2731,6 @@ body,
 .mvp-id-number {
   min-width: 0;
   max-width: 100%;
-  overflow-wrap: anywhere;
   letter-spacing: 0;
 }
 
@@ -2679,41 +2789,8 @@ body,
     padding-top: 24px;
   }
 
-  .mvp-profile-page .back-link {
+  .mvp-profile-toolbar {
     margin-bottom: 24px;
-  }
-
-  .mvp-id-content {
-    padding: 24px;
-  }
-
-  .mvp-id-watermark {
-    mask-size: 72px 72px;
-  }
-
-  .mvp-id-identity {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 24px;
-    margin: 28px 0;
-  }
-
-  .mvp-id-portrait {
-    width: 104px;
-    height: 116px;
-    font-size: 28px;
-  }
-
-  .mvp-id-details h1 {
-    font-size: 28px;
-  }
-
-  .mvp-id-brand span {
-    font-size: 11px;
-  }
-
-  .mvp-id-bottom {
-    font-size: 11px;
-    letter-spacing: .04em;
   }
 
   .mvp-profile-expertise {

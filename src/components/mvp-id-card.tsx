@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { getImageProps } from "next/image";
-import { useEffect, type PointerEvent } from "react";
+import { useEffect, useLayoutEffect, useRef, type CSSProperties, type PointerEvent } from "react";
 import { motion, useSpring, useTransform } from "motion/react";
 import { MapPin } from "lucide-react";
 import { ProfilePortrait } from "@/components/profile-portrait";
@@ -10,6 +10,8 @@ import { countryById } from "@/lib/catalog";
 import type { MvpProfile } from "@/lib/types";
 
 const spring = { stiffness: 180, damping: 30, mass: 1, restDelta: 0.001 };
+const cardWidth = 640;
+const cardHeight = 400;
 // Reuse the official artwork at tile resolution, not its 4268px source size.
 const watermarkImage = getImageProps({ src: "/mvp-logo.png", alt: "", width: 88, height: 88 }).props.src;
 
@@ -19,6 +21,9 @@ export function MvpIdCard({ profile }: { profile: MvpProfile }) {
 }
 
 function InteractiveIdCard({ profile }: { profile: MvpProfile }) {
+    const stage = useRef<HTMLDivElement>(null);
+    const canvas = useRef<HTMLDivElement>(null);
+    const name = useRef<HTMLHeadingElement>(null);
     const interactive = useMedia("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)");
     const x = useSpring(0, spring);
     const y = useSpring(0, spring);
@@ -42,6 +47,35 @@ function InteractiveIdCard({ profile }: { profile: MvpProfile }) {
     const spotlightOpacity = useTransform(light, [0, 1], [0.14, 0.5]);
     const watermarkOpacity = useTransform(light, [0, 1], [0.18, 0.3]);
 
+    useLayoutEffect(() => {
+        const container = stage.current, surface = canvas.current, heading = name.current;
+        if (!container || !surface || !heading) return;
+        let active = true;
+        const resize = () => {
+            surface.style.setProperty("--mvp-id-measured-scale", String(container.getBoundingClientRect().width / cardWidth));
+        };
+        // Fit the full name once in design coordinates, never to the viewport.
+        // Its fixed-height slot keeps the country and awards anchored below it.
+        const fitName = () => {
+            if (!active) return;
+            const text = heading.firstElementChild as HTMLSpanElement;
+            heading.style.fontSize = "36px";
+            const size = Math.min(36, 36 * (heading.clientWidth - 2) / Math.max(1, text.offsetWidth));
+            heading.style.fontSize = `${size}px`;
+        };
+        resize();
+        fitName();
+        const observer = new ResizeObserver(resize);
+        observer.observe(container);
+        void document.fonts.ready.then(fitName);
+        document.fonts.addEventListener("loadingdone", fitName);
+        return () => {
+            active = false;
+            observer.disconnect();
+            document.fonts.removeEventListener("loadingdone", fitName);
+        };
+    }, []);
+
     useEffect(() => {
         if (!interactive) { x.jump(0); y.jump(0); light.jump(0); }
     }, [interactive, x, y, light]);
@@ -58,35 +92,38 @@ function InteractiveIdCard({ profile }: { profile: MvpProfile }) {
         light.set(1);
     };
 
-    return <div className="mvp-id-stage" onPointerEnter={move} onPointerMove={move} onPointerLeave={reset} onPointerCancel={reset}>
-        <motion.article className="mvp-id-card" aria-labelledby="mvp-name" data-interactive={interactive}
-            style={{ rotateX: interactive ? rotateX : 0, rotateY: interactive ? rotateY : 0 }}>
-            <div className="mvp-id-material" aria-hidden="true">
-                <div className="mvp-id-foil" />
-                <motion.div className="mvp-id-watermark" style={{
-                    maskImage: `url("${watermarkImage}")`, opacity: interactive ? watermarkOpacity : 0.18,
-                }} />
-                <motion.div className="mvp-id-refraction mvp-id-refraction--near" style={{
-                    x: interactive ? nearX : "0%", y: interactive ? nearY : "0%", scale: interactive ? nearScale : 1, opacity: interactive ? nearOpacity : 0.28,
-                }} />
-                <motion.div className="mvp-id-refraction mvp-id-refraction--far" style={{
-                    x: interactive ? farX : "0%", y: interactive ? farY : "0%", scale: interactive ? farScale : 1, opacity: interactive ? farOpacity : 0.22,
-                }} />
-                <motion.div className="mvp-id-spotlight" style={{
-                    x: interactive ? spotlightX : "0%", y: interactive ? spotlightY : "0%", opacity: interactive ? spotlightOpacity : 0.14,
-                }} />
-                <div className="mvp-id-texture" />
-            </div>
-            <div className="mvp-id-content">
-                <div className="mvp-id-brand"><Image src="/mvp-logo.png" alt="" width={44} height={44} sizes="44px" /><p>Microsoft MVP<span>Most Valuable Professional</span></p></div>
-                <div className="mvp-id-identity">
-                    <ProfilePortrait profile={profile} className="mvp-id-portrait" sizes="(max-width: 540px) 104px, 144px" eager />
-                    <div className="mvp-id-details"><h1 id="mvp-name">{profile.name}</h1><p className="mvp-id-country"><MapPin size={14} aria-hidden="true" />{countryById.get(profile.countryId)?.name ?? "Country not listed"}</p>
+    return <div ref={stage} className="mvp-id-stage" style={{
+        "--mvp-id-width": `${cardWidth}px`, "--mvp-id-height": `${cardHeight}px`, aspectRatio: `${cardWidth} / ${cardHeight}`,
+    } as CSSProperties} onPointerEnter={move} onPointerMove={move} onPointerLeave={reset} onPointerCancel={reset}>
+        <div ref={canvas} className="mvp-id-canvas">
+            <motion.article className="mvp-id-card" aria-labelledby="mvp-name" data-interactive={interactive}
+                style={{ rotateX: interactive ? rotateX : 0, rotateY: interactive ? rotateY : 0 }}>
+                <div className="mvp-id-material" aria-hidden="true">
+                    <div className="mvp-id-foil" />
+                    <motion.div className="mvp-id-watermark" style={{
+                        maskImage: `url("${watermarkImage}")`, opacity: interactive ? watermarkOpacity : 0.18,
+                    }} />
+                    <motion.div className="mvp-id-refraction mvp-id-refraction--near" style={{
+                        x: interactive ? nearX : "0%", y: interactive ? nearY : "0%", scale: interactive ? nearScale : 1, opacity: interactive ? nearOpacity : 0.28,
+                    }} />
+                    <motion.div className="mvp-id-refraction mvp-id-refraction--far" style={{
+                        x: interactive ? farX : "0%", y: interactive ? farY : "0%", scale: interactive ? farScale : 1, opacity: interactive ? farOpacity : 0.22,
+                    }} />
+                    <motion.div className="mvp-id-spotlight" style={{
+                        x: interactive ? spotlightX : "0%", y: interactive ? spotlightY : "0%", opacity: interactive ? spotlightOpacity : 0.14,
+                    }} />
+                    <div className="mvp-id-texture" />
+                </div>
+                <div className="mvp-id-content">
+                    <div className="mvp-id-brand"><Image src="/mvp-logo.png" alt="" width={44} height={44} sizes="44px" /><p>Microsoft MVP<span>Most Valuable Professional</span></p></div>
+                    <div className="mvp-id-identity">
+                        <ProfilePortrait profile={profile} className="mvp-id-portrait" sizes="144px" eager />
+                        <div className="mvp-id-details"><h1 ref={name} id="mvp-name" style={{ fontSize: `${Math.min(36, 400 / Math.max(1, [...profile.name].length))}px` }}><span>{profile.name}</span></h1><p className="mvp-id-country"><MapPin size={14} aria-hidden="true" />{countryById.get(profile.countryId)?.name ?? "Country not listed"}</p></div>
                         <div className="mvp-id-awards"><h2>Award categories</h2><ul>{profile.awardCategories.map(category => <li key={category}>{category}</li>)}</ul></div>
                     </div>
+                    <div className="mvp-id-bottom"><span aria-hidden="true">MVP GLOBAL</span><span className="mvp-id-number">MVP ID · {profile.id}</span></div>
                 </div>
-                <div className="mvp-id-bottom"><span aria-hidden="true">MVP GLOBAL</span><span className="mvp-id-number">MVP ID · {profile.id}</span></div>
-            </div>
-        </motion.article>
+            </motion.article>
+        </div>
     </div>;
 }

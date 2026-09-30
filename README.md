@@ -29,6 +29,7 @@ MVP Global turns the public [Microsoft MVP directory](https://mvp.microsoft.com/
 - **Accessible directory** — every profile is reachable without WebGL, with keyboard navigation and 24 results per page.
 - **Shareable country pages** — deep links like `/countries/hong-kong-sar`, including small territories without a globe polygon.
 - **Profile link previews** — ID-based profile links include Open Graph and Twitter cards with a generated portrait, name, country, and awards preview.
+- **Profile sharing** — share a profile on Facebook, LinkedIn, or X, or copy its public link from the Share button. Shared links omit directory filters.
 - **Composable search & filters** — country, award category, technology, and region combine through URL state (`?country=philippines&country=singapore`), with browser history and persisted theme.
 - **Zero-config to run** — the bundled snapshot means `npm ci && npm run dev` is all it takes; no environment variables or backend.
 - **Self-refreshing data** — a monthly GitHub Actions workflow scrapes, validates, and opens a pull request with the updated snapshot.

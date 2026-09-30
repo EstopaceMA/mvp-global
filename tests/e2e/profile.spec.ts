@@ -461,8 +461,8 @@ test("duplicate names link to distinct IDs and navigating identities resets port
     }
 });
 
-for (const width of [320, 390, 768, 1100, 1440]) {
-    test(`longest snapshot name and all awards reflow at ${width}px in both themes with accessible keyboard order`, async ({ page }, testInfo) => {
+for (const width of [320, 390, 540, 541, 768, 1100, 1440]) {
+    test(`fixed-ratio ID card fits at ${width}px in both themes with accessible keyboard order`, async ({ page }, testInfo) => {
         await page.setViewportSize({ width, height: 1000 });
         await page.emulateMedia({ reducedMotion: "reduce" });
         await page.goto(`/mvps/${longest.id}`);
@@ -477,9 +477,20 @@ for (const width of [320, 390, 768, 1100, 1440]) {
             }
             await expect(page.locator("html")).toHaveClass(new RegExp(`\\b${theme}\\b`));
             await expectNeutral(page);
+            const cursors = await page.locator(".mvp-id-stage, .mvp-id-stage *")
+                .evaluateAll(elements => [...new Set(elements.map(element => getComputedStyle(element).cursor))]);
+            expect(cursors).toEqual(["default"]);
             const box = (await card.boundingBox())!;
             expect(box.width).toBeLessThanOrEqual(640.5);
-            await expect(card.locator(".mvp-id-watermark")).toHaveCSS("mask-size", width <= 540 ? "72px 72px" : "88px 88px");
+            expect(box.width / box.height).toBeCloseTo(640 / 400, 4);
+            const stage = (await page.locator(".mvp-id-stage").boundingBox())!;
+            expect(Math.abs(stage.height - box.height)).toBeLessThanOrEqual(0.1);
+            const portrait = (await card.locator(".mvp-id-portrait").boundingBox())!;
+            const details = (await card.locator(".mvp-id-details").boundingBox())!;
+            expect(portrait.x + portrait.width).toBeLessThan(details.x);
+            expect(Math.abs(portrait.y - details.y)).toBeLessThanOrEqual(1);
+            await expect(card.locator("h1")).toHaveCSS("white-space", "nowrap");
+            await expect(card.locator(".mvp-id-watermark")).toHaveCSS("mask-size", "88px 88px");
             expect(box.width).toBeGreaterThan(0);
             expect(Math.abs(box.x + box.width / 2 - width / 2)).toBeLessThanOrEqual(1);
             expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -516,16 +527,134 @@ for (const width of [320, 390, 768, 1100, 1440]) {
             const back = page.getByRole("link", { name: "Back to directory", exact: true });
             await back.focus();
             await page.keyboard.press("Tab");
+            const share = page.getByRole("button", { name: "Share profile", exact: true });
+            await expect(share).toBeFocused();
+            await page.keyboard.press("Tab");
             await expect(page.locator(".mvp-official-link")).toBeFocused();
             expect(await card.evaluate(element => (element as HTMLElement).tabIndex)).toBe(-1);
             await expect(card.locator('a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])')).toHaveCount(0);
+            await share.focus();
+            await page.keyboard.press("Enter");
+            const shareOptions = page.getByRole("dialog", { name: "Share profile", exact: true });
+            await expect(shareOptions).toBeVisible();
+            await expect(shareOptions.getByRole("link", { name: "Facebook (opens in a new tab)", exact: true })).toBeFocused();
+            for (const platform of ["LinkedIn", "X"]) {
+                await page.keyboard.press("Tab");
+                await expect(shareOptions.getByRole("link", { name: `${platform} (opens in a new tab)`, exact: true })).toBeFocused();
+            }
+            await page.keyboard.press("Tab");
+            await expect(shareOptions.getByRole("button", { name: "Copy link", exact: true })).toBeFocused();
+            const shareBox = (await shareOptions.boundingBox())!;
+            expect(shareBox.x).toBeGreaterThanOrEqual(0);
+            expect(shareBox.x + shareBox.width).toBeLessThanOrEqual(width);
+            expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+            for (const option of await shareOptions.locator("a, button").all()) {
+                const target = (await option.boundingBox())!;
+                expect(target.height).toBeGreaterThanOrEqual(44);
+                expect(target.width).toBeGreaterThanOrEqual(44);
+            }
             const report = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21aa"]).analyze();
             await testInfo.attach(`profile-axe-${width}-${theme}`, { body: JSON.stringify(report, null, 2), contentType: "application/json" });
             const serious = report.violations.filter(violation => ["serious", "critical"].includes(violation.impact ?? ""));
             expect(serious, JSON.stringify(serious, null, 2)).toEqual([]);
+            await page.keyboard.press("Escape");
+            await expect(shareOptions).not.toBeVisible();
+            await expect(share).toBeFocused();
         }
     });
 }
+
+test("card coordinates, typography, and decoration scale uniformly without breakpoint reflow", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const unicode = required(profiles.find(profile => /[\p{Script=Han}\p{Script=Hangul}]/u.test(profile.name)), "Unicode name");
+    const coveredCountryIds = new Set(profiles.map(profile => profile.countryId));
+    const longestCountry = countries.filter(country => coveredCountryIds.has(country.id))
+        .reduce((a, b) => b.name.length > a.name.length ? b : a);
+    const longCountryProfile = required(profiles.find(profile => profile.countryId === longestCountry.id), "longest country label");
+    for (const profile of [longest, missingPhoto, unicode, longCountryProfile]) {
+        await page.setViewportSize({ width: 1440, height: 1000 });
+        await page.goto(`/mvps/${profile.id}`);
+        await expectProfile(page, profile);
+        await page.evaluate(() => document.fonts.ready);
+        const measure = () => page.locator(".mvp-id-card").evaluate(card => {
+            const bounds = card.getBoundingClientRect();
+            const scale = bounds.width / 640;
+            const selectors = [".mvp-id-brand", ".mvp-id-brand img", ".mvp-id-brand p", ".mvp-id-brand span",
+                ".mvp-id-portrait", ".mvp-id-details", "h1", "h1 span", ".mvp-id-country", ".mvp-id-country svg",
+                ".mvp-id-awards", ".mvp-id-awards h2", ".mvp-id-awards li", ".mvp-id-bottom", ".mvp-id-bottom > span",
+                ".mvp-id-material", ".mvp-id-foil", ".mvp-id-watermark", ".mvp-id-texture"];
+            return [...card.querySelectorAll<HTMLElement>(selectors.join(","))].map(element => {
+                const rect = element.getBoundingClientRect(), style = getComputedStyle(element);
+                return {
+                    x: (rect.x - bounds.x) / scale, y: (rect.y - bounds.y) / scale,
+                    width: rect.width / scale, height: rect.height / scale,
+                    fontSize: style.fontSize, spacing: style.letterSpacing, radius: style.borderRadius,
+                    maskSize: style.maskSize, background: style.backgroundImage,
+                };
+            });
+        });
+        const design = await measure();
+        const stage = page.locator(".mvp-id-stage");
+        for (const width of [320, 390, 540, 541, 767, 768, 1100, 1440]) {
+            await page.setViewportSize({ width, height: 1000 });
+            await expect.poll(async () => Math.abs((await page.locator(".mvp-id-card").boundingBox())!.width
+                - (await stage.boundingBox())!.width)).toBeLessThan(0.1);
+            await expect.poll(async () => {
+                const actual = await measure();
+                return Math.max(...actual.flatMap((item, index) => (["x", "y", "width", "height"] as const).map(key =>
+                    Math.abs(item[key] - design[index][key]))));
+            }).toBeLessThan(0.1);
+            const actual = await measure();
+            actual.forEach((item, index) => {
+                for (const key of ["fontSize", "spacing", "radius", "maskSize", "background"] as const) {
+                    expect(item[key]).toBe(design[index][key]);
+                }
+            });
+            // The surrounding site's responsive footer has its own brief theme transition.
+            await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+            const fit = await page.locator(".mvp-id-card").evaluate(card => {
+                const bounds = (selector: string) => card.querySelector(selector)!.getBoundingClientRect();
+                const content = card.querySelectorAll<HTMLElement>("h1 span, .mvp-id-country, .mvp-id-awards li, .mvp-id-bottom > span");
+                return {
+                    singleLine: [...content].every(element => getComputedStyle(element).whiteSpace === "nowrap"),
+                    overflowing: [...content].filter(element => element.scrollWidth > element.clientWidth + 1).map(element => element.textContent),
+                    nameFits: bounds("h1 span").right <= bounds("h1").right + 0.5,
+                    separated: bounds(".mvp-id-brand").bottom <= bounds(".mvp-id-portrait").top
+                        && bounds(".mvp-id-portrait").right < bounds(".mvp-id-details").left
+                        && bounds("h1").bottom < bounds(".mvp-id-country").top
+                        && bounds(".mvp-id-country").bottom < bounds(".mvp-id-awards").top
+                        && bounds(".mvp-id-awards ul").bottom < bounds(".mvp-id-bottom").top,
+                };
+            });
+            expect(fit, `Full content fits without overlap at ${width}px: ${profile.name}`).toEqual({
+                singleLine: true, overflowing: [], nameFits: true, separated: true,
+            });
+        }
+        // Changes to the parent, not just the viewport, must update the scale.
+        await stage.evaluate(element => element.style.width = "257px");
+        await expect.poll(async () => (await page.locator(".mvp-id-card").boundingBox())!.width).toBeCloseTo(257, 1);
+        const actual = await measure();
+        actual.forEach((item, index) => {
+            expect(item.x).toBeCloseTo(design[index].x, 1);
+            expect(item.y).toBeCloseTo(design[index].y, 1);
+        });
+        await stage.evaluate(element => element.style.removeProperty("width"));
+    }
+});
+
+test("server-rendered card keeps its aspect ratio before hydration", async ({ browser, baseURL }) => {
+    const context = await browser.newContext({ javaScriptEnabled: false, viewport: { width: 320, height: 800 } });
+    try {
+        const page = await context.newPage();
+        await page.goto(`${baseURL}/mvps/${longest.id}`);
+        const box = (await page.locator(".mvp-id-card").boundingBox())!;
+        const stage = (await page.locator(".mvp-id-stage").boundingBox())!;
+        expect(box.width).toBeCloseTo(stage.width, 1);
+        expect(box.width / box.height).toBeCloseTo(640 / 400, 4);
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+        await expect(page.getByRole("heading", { level: 1 })).toHaveText(longest.name);
+    } finally { await context.close(); }
+});
 
 test("MVP holograms repeat a locally optimized logo as a fixed luminance mask", async ({ page, baseURL }) => {
     await page.goto(`/mvps/${longest.id}`);
@@ -674,7 +803,7 @@ for (const reducedMotion of ["no-preference", "reduce"] as const) {
         const interactive = await page.evaluate(query => matchMedia(query).matches, interactiveMedia);
         expect(interactive).toBe(!isMobile && reducedMotion === "no-preference");
         await expect(page.locator(".mvp-id-card")).toHaveAttribute("data-interactive", String(interactive));
-        await expect(page.locator(".mvp-id-stage")).toHaveCSS("perspective", "1000px");
+        await expect(page.locator(".mvp-id-canvas")).toHaveCSS("perspective", "1000px");
         await expectNeutral(page);
         const [initial] = await motionSamples(page);
         expectStaticLayers(initial, initial);
