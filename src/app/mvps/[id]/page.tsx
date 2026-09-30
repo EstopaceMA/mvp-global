@@ -7,6 +7,7 @@ import { ProfileBackLink } from "@/components/profile-back-link";
 import { Footer } from "@/components/site-footer";
 import { countryById } from "@/lib/catalog";
 import { getProfileById } from "@/lib/server-directory";
+import { getProfileMetadata } from "@/lib/profile-metadata";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -17,12 +18,7 @@ export function generateStaticParams() { return []; }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const profile = getProfileById((await params).id);
     if (!profile) notFound();
-    const country = countryById.get(profile.countryId)?.name;
-    const awards = profile.awardCategories.join(", ");
-    return {
-        title: `${profile.name} — Microsoft MVP`,
-        description: `Meet ${profile.name}, a Microsoft MVP${country ? ` in ${country}` : ""}${awards ? ` recognized in ${awards}` : ""}. Explore their technology expertise and official Microsoft profile.`,
-    };
+    return getProfileMetadata(profile, countryById.get(profile.countryId)?.name);
 }
 
 export default async function MvpPage({ params }: Props) {

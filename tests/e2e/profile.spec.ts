@@ -55,6 +55,11 @@ async function expectProfile(page: Page, profile: MvpProfile) {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(profile.name);
     await expect(page.locator(".mvp-id-country")).toHaveText(required(countries.find(country => country.id === profile.countryId), "profile country").name);
     await expect(page.locator(".mvp-id-awards li")).toHaveText(profile.awardCategories);
+    const identifier = page.locator(".mvp-id-number");
+    await expect(identifier).toHaveText(`MVP ID · ${profile.id}`);
+    await expect(identifier).toBeVisible();
+    expect(await identifier.ariaSnapshot()).toContain(profile.id);
+    await expect(page.locator(".mvp-id-bottom")).not.toContainText("THE COMMUNITY ATLAS");
     await expect(page.locator(".mvp-profile-expertise li")).toHaveText(profile.technologies);
     const official = page.getByRole("link", { name: "View official Microsoft profile (opens in a new tab)", exact: true });
     await expect(official).toHaveAttribute("href", profile.officialProfileUrl);
@@ -425,7 +430,7 @@ test("duplicate names link to distinct IDs and navigating identities resets port
     }
 });
 
-for (const width of [320, 390, 768, 1440]) {
+for (const width of [320, 390, 768, 1100, 1440]) {
     test(`longest snapshot name and all awards reflow at ${width}px in both themes with accessible keyboard order`, async ({ page }, testInfo) => {
         await page.setViewportSize({ width, height: 1000 });
         await page.emulateMedia({ reducedMotion: "reduce" });

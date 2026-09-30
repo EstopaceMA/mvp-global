@@ -85,7 +85,7 @@ function InteractiveIdCard({ profile }: { profile: MvpProfile }) {
                         <div className="mvp-id-awards"><h2>Award categories</h2><ul>{profile.awardCategories.map(category => <li key={category}>{category}</li>)}</ul></div>
                     </div>
                 </div>
-                <div className="mvp-id-bottom" aria-hidden="true"><span>MVP GLOBAL</span><span>THE COMMUNITY ATLAS</span></div>
+                <div className="mvp-id-bottom"><span aria-hidden="true">MVP GLOBAL</span><span className="mvp-id-number">MVP ID · {profile.id}</span></div>
             </div>
         </motion.article>
     </div>;

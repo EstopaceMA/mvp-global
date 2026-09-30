@@ -2617,6 +2617,13 @@ body,
   color: #c4c7cf;
 }
 
+.mvp-id-number {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  letter-spacing: 0;
+}
+
 .mvp-profile-expertise {
   margin-top: 44px;
 }

@@ -28,6 +28,7 @@ MVP Global turns the public [Microsoft MVP directory](https://mvp.microsoft.com/
 - **Interactive globe** — logarithmic marker sizing and coloring, country highlights, drag-to-rotate, and reduced-motion support.
 - **Accessible directory** — every profile is reachable without WebGL, with keyboard navigation and 24 results per page.
 - **Shareable country pages** — deep links like `/countries/hong-kong-sar`, including small territories without a globe polygon.
+- **Profile link previews** — ID-based profile links include Open Graph and Twitter cards with a generated portrait, name, country, and awards preview.
 - **Composable search & filters** — country, award category, technology, and region combine through URL state (`?country=philippines&country=singapore`), with browser history and persisted theme.
 - **Zero-config to run** — the bundled snapshot means `npm ci && npm run dev` is all it takes; no environment variables or backend.
 - **Self-refreshing data** — a monthly GitHub Actions workflow scrapes, validates, and opens a pull request with the updated snapshot.
@@ -49,12 +50,21 @@ npm run dev
 
 Open [localhost:3000](http://localhost:3000). No environment variables, database, scraper files, or Microsoft credentials are needed — the app runs entirely from the [bundled snapshot](src/data/manifest.json).
 
+### Public link previews
+
+Set `SITE_URL` to the public HTTPS origin in both the build and runtime environments on a custom host. On Vercel, the production domain is detected from `VERCEL_PROJECT_PRODUCTION_URL` (falling back to `VERCEL_URL`); local development defaults to localhost. This produces absolute canonical, Open Graph, and Twitter URLs without using request headers or disabling profile-page caching.
+
+Each profile has a 1200×630 PNG at `/mvps/[id]/preview`, generated on its first request and cached for one day. Sharing `/mvps/[id]` uses that image automatically; directory filters never change the canonical or preview URL. Missing IDs return 404. Portraits come only from the published Microsoft image URL, with a three-second timeout and initials on missing, invalid, or unavailable images. Social services cache previews separately and may need a rescrape after deployment.
+
+Preview fonts are local Geist and Noto Sans WOFF subsets, including CJK and Korean names; no external font service is required. Production browser checks can enforce ISR behavior with `PREVIEW_TEST_PRODUCTION=1` alongside `PLAYWRIGHT_BASE_URL` and the same `SITE_URL` used by the server.
+
 ## Explore
 
 | Route | Description |
 | --- | --- |
 | `/` | The interactive globe: search, filters, and country selection. Desktop shows a side sheet; mobile shows a bottom sheet. |
 | `/mvps` | The accessible directory, with alphabetical cards. |
+| `/mvps/[id]` | An individual MVP profile with an ID-based social preview. |
 | `/countries/[country]` | Shareable, per-country pages. |
 | `/about` | Snapshot coverage, data source, and attribution. |
 
@@ -62,7 +72,7 @@ Search matches names, countries, regions, award categories, and technologies, ig
 
 ## Refreshing the data
 
-The site never talks to Microsoft at build or request time — it reads a prepared, version-controlled snapshot. A separate, independent scraper package collects that snapshot:
+Profile data comes from a prepared, version-controlled snapshot, not a live Microsoft directory API. Portrait images are loaded from Microsoft's image host by the image optimizer and social preview renderer. A separate, independent scraper package collects the snapshot:
 
 ```sh
 # 1. Scrape a fresh export (see mvp-scraper/README.md)
