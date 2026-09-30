@@ -10,21 +10,22 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function Brand() {
-  return <Link href="/" className="brand" aria-label="MVP Global home"><Image src="/mvp-logo.png" alt="" width={38} height={38} sizes="38px" loading="eager" className="brand-mark"/><span>MVP<span className="brand-global">GLOBAL</span><small>THE COMMUNITY ATLAS</small></span></Link>;
+  return <Link href="/" className="brand" aria-label="MVP Global home"><Image src="/mvp-logo.png" alt="" width={38} height={38} sizes="38px" loading="eager" className="brand-mark" /><span>MVP<span className="brand-global">GLOBAL</span><small>THE COMMUNITY ATLAS</small></span></Link>;
 }
 export function SiteHeader() {
   const pathname = usePathname();
+  const inDirectory = pathname === "/mvps" || pathname.startsWith("/mvps/") || pathname.startsWith("/countries/");
   const { filters } = useFilters();
   const { resolvedTheme, setTheme } = useTheme();
   return <header className="site-header">
     <Brand />
     <nav className="primary-nav" aria-label="Main navigation">
-      <Link href={viewHref("/", filters)} className={cn("nav-link", pathname === "/" && "active")} aria-current={pathname === "/" ? "page" : undefined}><Globe2 size={15}/><span>Explore</span></Link>
-      <Link href={viewHref("/mvps", filters)} className={cn("nav-link", pathname === "/mvps" || pathname.startsWith("/countries/") ? "active" : "")} aria-current={pathname === "/mvps" ? "page" : undefined}><LayoutGrid size={15}/><span>Directory</span></Link>
+      <Link href={viewHref("/", filters)} className={cn("nav-link", pathname === "/" && "active")} aria-current={pathname === "/" ? "page" : undefined}><Globe2 size={15} /><span>Explore</span></Link>
+      <Link href={viewHref("/mvps", filters)} className={cn("nav-link", inDirectory && "active")} aria-current={pathname === "/mvps" ? "page" : inDirectory ? "location" : undefined}><LayoutGrid size={15} /><span>Directory</span></Link>
       <Link href="/about" className={cn("nav-link about-nav", pathname === "/about" && "active")} aria-current={pathname === "/about" ? "page" : undefined}>About</Link>
     </nav>
-    <div className="header-actions"><a className="program-link" href="https://mvp.microsoft.com/" target="_blank" rel="noopener noreferrer">Microsoft MVP program <ArrowUpRight size={13}/></a>
-      <Button variant="ghost" size="icon" className="theme-toggle" aria-label="Toggle color theme" onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}><Sun className="theme-icon theme-icon-sun" size={17} aria-hidden="true"/><Moon className="theme-icon theme-icon-moon" size={17} aria-hidden="true"/></Button>
+    <div className="header-actions"><a className="program-link" href="https://mvp.microsoft.com/" target="_blank" rel="noopener noreferrer">Microsoft MVP program <ArrowUpRight size={13} /></a>
+      <Button variant="ghost" size="icon" className="theme-toggle" aria-label="Toggle color theme" onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}><Sun className="theme-icon theme-icon-sun" size={17} aria-hidden="true" /><Moon className="theme-icon theme-icon-moon" size={17} aria-hidden="true" /></Button>
     </div>
   </header>;
 }

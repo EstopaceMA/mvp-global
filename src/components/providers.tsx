@@ -21,7 +21,7 @@ function loadProfiles() {
   return cached;
 }
 interface DirectoryContextValue { profiles: MvpProfile[] | null; error: string | null; retry: () => void }
-const DirectoryContext = createContext<DirectoryContextValue>({ profiles: null, error: null, retry: () => {} });
+const DirectoryContext = createContext<DirectoryContextValue>({ profiles: null, error: null, retry: () => { } });
 export const useDirectory = () => useContext(DirectoryContext);
 
 function ThemeColor() {
@@ -35,6 +35,8 @@ function ThemeColor() {
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
+  const needsDirectory = pathname === "/" || pathname === "/mvps" || pathname.startsWith("/countries/");
   useEffect(() => {
     if (process.env.NODE_ENV === "production") {
       Clarity.init("ymc3v0693l");
@@ -48,12 +50,13 @@ export function Providers({ children }: { children: React.ReactNode }) {
     loadProfiles().then(setProfiles).catch(() => setError("We couldn’t load the directory. Please try again."));
   }, []);
   useEffect(() => {
+    if (!needsDirectory) return;
     let active = true;
     loadProfiles().then(data => { if (active) setProfiles(data); }).catch(() => { if (active) setError("We couldn’t load the directory. Please try again."); });
     return () => { active = false; };
-  }, []);
+  }, [needsDirectory]);
   return <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
-    <ThemeColor/>
+    <ThemeColor />
     <TooltipProvider delayDuration={250}>
       <DirectoryContext.Provider value={{ profiles, error, retry }}>{children}</DirectoryContext.Provider>
     </TooltipProvider>

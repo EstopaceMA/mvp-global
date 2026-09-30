@@ -7,6 +7,7 @@ import { useDirectory } from "@/components/providers";
 import { useFilters } from "@/hooks/use-filters";
 import { countries, formatCount, manifest } from "@/lib/catalog";
 import { describeFilter, EMPTY_FILTERS, type QueryResult } from "@/lib/directory";
+import { profileHref } from "@/lib/profile";
 import type { Filters } from "@/lib/types";
 
 export function ResultsSkeleton({ compact = false }: { compact?: boolean }) {
@@ -14,10 +15,10 @@ export function ResultsSkeleton({ compact = false }: { compact?: boolean }) {
     <div className="results-grid" aria-label="Loading profiles" role="status">
       {Array.from({ length: 6 }, (_, index) => <div key={index} className="profile-skeleton" aria-hidden="true">
         <div className="profile-content">
-          <div className="profile-top"><Skeleton className="profile-skeleton-avatar"/><div className="profile-skeleton-identity"><Skeleton className="profile-skeleton-name"/><Skeleton className="profile-skeleton-country"/></div></div>
-          <Skeleton className="profile-skeleton-category"/>
-          <Skeleton className="profile-skeleton-line"/><Skeleton className="profile-skeleton-line"/>
-          <div className="profile-skeleton-link"><Skeleton className="profile-skeleton-country"/></div>
+          <div className="profile-top"><Skeleton className="profile-skeleton-avatar" /><div className="profile-skeleton-identity"><Skeleton className="profile-skeleton-name" /><Skeleton className="profile-skeleton-country" /></div></div>
+          <Skeleton className="profile-skeleton-category" />
+          <Skeleton className="profile-skeleton-line" /><Skeleton className="profile-skeleton-line" />
+          <div className="profile-skeleton-link"><Skeleton className="profile-skeleton-country" /></div>
         </div>
       </div>)}
       <span className="sr-only">Loading MVP profiles</span>
@@ -27,7 +28,7 @@ export function ResultsSkeleton({ compact = false }: { compact?: boolean }) {
 
 export function DataError() {
   const { error, retry } = useDirectory();
-  return error ? <div className="data-error" role="alert"><p>{error}</p><Button variant="outline" size="sm" onClick={retry}><RefreshCw size={13}/>Retry directory</Button></div> : null;
+  return error ? <div className="data-error" role="alert"><p>{error}</p><Button variant="outline" size="sm" onClick={retry}><RefreshCw size={13} />Retry directory</Button></div> : null;
 }
 
 export function Results({ result, compact = false, onInteract }: { result: QueryResult | null; compact?: boolean; onInteract?: () => void }) {
@@ -35,19 +36,19 @@ export function Results({ result, compact = false, onInteract }: { result: Query
   const { filters, setFilters } = useFilters();
   const country = filters.country.length === 1 ? countries.find(country => country.slug === filters.country[0]) : undefined;
   const change = (values: Partial<Filters>) => { setFilters(values); onInteract?.(); };
-  if (!result) return error ? <DataError/> : <ResultsSkeleton compact={compact}/>;
+  if (!result) return error ? <DataError /> : <ResultsSkeleton compact={compact} />;
   const noSourceProfiles = country && !manifest.counts[country.id];
   return <div className={compact ? "results-container compact-results" : "results-container"}>
     <div className="results-meta"><p role="status" aria-live="polite"><strong>{formatCount(result.total)}</strong> {result.total === 1 ? "MVP" : "MVPs"}{country ? ` in ${country.name}` : filters.country.length ? ` in ${filters.country.length} countries` : " to discover"}</p><span>NAME A–Z</span></div>
-    {error && <DataError/>}
-    {result.total === 0 ? <div className="empty-results"><span className="empty-icon"><SearchX size={26}/></span><h3>{noSourceProfiles ? "No profiles in this snapshot" : "No matching MVPs"}</h3><p>{noSourceProfiles ? `This snapshot has no public profiles listed for ${country.name}.` : "Try a different search or give your filters a little more room."}</p>
+    {error && <DataError />}
+    {result.total === 0 ? <div className="empty-results"><span className="empty-icon"><SearchX size={26} /></span><h3>{noSourceProfiles ? "No profiles in this snapshot" : "No matching MVPs"}</h3><p>{noSourceProfiles ? `This snapshot has no public profiles listed for ${country.name}.` : "Try a different search or give your filters a little more room."}</p>
       {result.relaxations.length > 0 && <div className="filter-relaxations" aria-label="Ways to find matching MVPs">{result.relaxations.map(({ key, count }) => <Button key={key} variant="outline" onClick={() => change({ [key]: key === "q" ? "" : [] })}>Remove {describeFilter(key, filters, countries)} · {formatCount(count)} {count === 1 ? "match" : "matches"}</Button>)}</div>}
       <Button variant="outline" onClick={() => change(EMPTY_FILTERS)}>Explore all MVPs</Button>
-    </div> : <div className="results-grid">{result.profiles.map(profile => <ProfileCard profile={profile} key={profile.id} compact={compact}/>)}</div>}
+    </div> : <div className="results-grid">{result.profiles.map(profile => <ProfileCard profile={profile} href={profileHref(profile.id, filters)} key={profile.id} compact={compact} />)}</div>}
     {result.pages > 1 && <nav className="pagination" aria-label="Results pagination">
-      <Button variant="outline" size="sm" aria-label="Previous page" disabled={result.page <= 1} onClick={() => setFilters({ page: result.page - 1 })}><ArrowLeft size={14}/><span>Previous</span></Button>
+      <Button variant="outline" size="sm" aria-label="Previous page" disabled={result.page <= 1} onClick={() => setFilters({ page: result.page - 1 })}><ArrowLeft size={14} /><span>Previous</span></Button>
       <span>Page <strong>{result.page}</strong> of {result.pages}</span>
-      <Button variant="outline" size="sm" aria-label="Next page" disabled={result.page >= result.pages} onClick={() => setFilters({ page: result.page + 1 })}><span>Next</span><ArrowRight size={14}/></Button>
+      <Button variant="outline" size="sm" aria-label="Next page" disabled={result.page >= result.pages} onClick={() => setFilters({ page: result.page + 1 })}><span>Next</span><ArrowRight size={14} /></Button>
     </nav>}
   </div>;
 }

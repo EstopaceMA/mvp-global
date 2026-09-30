@@ -4,6 +4,14 @@ import { countries, manifest } from "./catalog";
 import { parseFilters, queryDirectory } from "./directory";
 import type { MvpProfile } from "./types";
 
+const profiles = profilesData as MvpProfile[];
+const profilesById = new Map(profiles.map(profile => [profile.id, profile]));
+
+// Shared by profile rendering and metadata; the published snapshot stays server-side.
+export function getProfileById(id: string) {
+  return profilesById.get(id);
+}
+
 export type SearchParams = Record<string, string | string[] | undefined>;
 export function serverResults(search: SearchParams, country?: string) {
   const params = new URLSearchParams();
@@ -12,6 +20,6 @@ export function serverResults(search: SearchParams, country?: string) {
   }
   if (country) params.set("country", country);
   const filters = parseFilters(params, countries, manifest);
-  return { filters, ...queryDirectory(profilesData as MvpProfile[], countries, filters) };
+  return { filters, ...queryDirectory(profiles, countries, filters) };
 }
 export type DirectoryResult = ReturnType<typeof serverResults>;

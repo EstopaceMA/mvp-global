@@ -34,4 +34,16 @@ The source of truth is `src/app/globals.css`. Use its semantic variables and the
 
 Reuse `Button`, `Input`, `Popover`, `Sheet`, and other shared primitives. Apply the semantic palette in both themes, use the existing filter and results components, and retain URL-driven filters and browser history. Give loading, empty, retry, and unavailable states the same typography and surfaces as loaded content.
 
+## MVP profile pages
+
+The profile ID card is a deliberate exception to the flat, square directory cards: a centered, dark metallic surface up to 640px wide, with 24px corners and restrained cyan/violet/gold foil. It stays dark in either theme; the surrounding page, expertise, navigation, and footer use the semantic palette above. Text and portraits sit above decorative layers, and identity and award text wrap without clipping.
+
+Only hover-capable fine pointers without a reduced-motion preference get pointer-driven shimmer and spring tilt (bounded to ±6°, 1000px perspective). Leaving or cancelling returns to neutral; touch and reduced-motion presentations keep the static foil. The card has no action and is not a keyboard tab stop. Forced colors removes the foil and uses system colors.
+
+The holographic material combines two opposing, independently translating/scaling radial gradients, a pointer-following soft-light highlight, and a static procedural crosshatch texture. These are original CSS gradients, not copied image assets. The existing Motion springs drive only transforms and opacity; there are no looping or entrance animations, added dependencies, SVG lighting filters, or flip controls. A clipped, isolated decorative group sits below all text and photos, retaining the same neutral material in static modes.
+
+A repeating MVP watermark reuses the existing logo through Next's image optimizer at tile resolution. A luminance mask (the source is opaque, not a transparent silhouette) reveals a cyan/violet/gold gradient through the diamond and subdues its blue field and lettering. Screen blending integrates the print with the foil beneath the moving reflections. The mask stays fixed while its opacity follows the existing light spring (18% at rest, 30% on hover). Tiles are 88px on desktop and 72px on narrow screens; touch/reduced motion retains the quiet resting print, and forced colors hides it with the other decoration. No reference artwork or additional logo assets are used.
+
+Local profile URLs use the published Microsoft ID. Result names and “View profile” carry the URL filters and page; “Back to directory” preserves them. The external Microsoft link lives below the profile card. Profile content and metadata are generated on first request and cached for the snapshot's deployment, while query-dependent navigation hydrates separately.
+
 Before shipping a visual change, run the existing unit, type, lint, production-build, and Playwright checks. Review 320, 390, 768, 1100, and 1440px widths in both themes, including open filters and results panels. Check long names and expertise, missing photos, empty results, failed data loads, unavailable WebGL, keyboard access, theme persistence, and no horizontal overflow. Accessibility audits must have no serious or critical violations.

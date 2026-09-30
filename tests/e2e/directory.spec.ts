@@ -18,9 +18,10 @@ test("globe renders and country selection opens eight Philippine profiles", asyn
   await expect(page.getByRole("dialog", { name: "Philippines", exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Philippines", exact: true })).toBeVisible();
   await expect(page.locator(".compact-results .profile-card")).toHaveCount(8);
-  const official = page.locator(".profile-link").first();
-  await expect(official).toHaveAttribute("target", "_blank");
-  await expect(official).toHaveAttribute("href", /^https:\/\/mvp.microsoft.com\/en-US\/mvp\/profile\//);
+  const profile = page.locator(".profile-link").first();
+  await expect(profile).toHaveJSProperty("target", "");
+  await expect(profile).toHaveAttribute("href", /^\/mvps\/[^/?]+\?country=philippines$/);
+  await expect(page.locator(".profile-card h3 a").first()).toHaveAttribute("href", (await profile.getAttribute("href"))!);
   await page.getByRole("button", { name: "Close results" }).click({ trial: true });
   await expect(page.getByPlaceholder("Find a country or region…")).not.toBeVisible();
   await page.screenshot({ path: `test-results/country-sheet-${testInfo.project.name}.png`, animations: "disabled", scale: "css" });
@@ -58,7 +59,8 @@ test("directory search, pagination, theme, country pages, and history preserve s
 });
 
 test("filters combine, zero results reset, and failed photos show initials", async ({ page }) => {
-  await page.route("**/_next/image?*", route => route.abort());
+  await page.route(url => url.pathname === "/_next/image"
+    && (url.searchParams.get("url") ?? "").startsWith("https://images.mvp.microsoft.com/"), route => route.abort());
   await page.goto("/mvps?country=philippines&category=Microsoft+Azure");
   await expect(page.locator(".profile-card").first()).toBeVisible();
   await expect(page.locator(".profile-avatar span").first()).toBeVisible();
@@ -79,7 +81,7 @@ test("filters combine, zero results reset, and failed photos show initials", asy
 test("WebGL fallback retains filters and retry recovers a failed data load", async ({ page }) => {
   await page.addInitScript(() => {
     const original = HTMLCanvasElement.prototype.getContext;
-    HTMLCanvasElement.prototype.getContext = function(this: HTMLCanvasElement, type: string, ...args: unknown[]) {
+    HTMLCanvasElement.prototype.getContext = function (this: HTMLCanvasElement, type: string, ...args: unknown[]) {
       if (type === "webgl" || type === "webgl2") return null;
       return Reflect.apply(original, this, [type, ...args]);
     } as typeof original;
